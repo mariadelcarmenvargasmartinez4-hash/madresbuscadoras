@@ -90,6 +90,25 @@ public static class ConfigurarNivel2Automatico
         ctrl.saludActual = 100f;
         ctrl.totalHojas = 10;
 
+        // 1.1 CONTROLADOR DE AUDIO (MÚSICA AMBIENTAL Y EFECTOS SONOROS)
+        GameObject goAudio = GameObject.Find("ControladorAudio");
+        if (goAudio == null)
+        {
+            goAudio = new GameObject("ControladorAudio");
+        }
+        var ctrlAudio = goAudio.GetComponent<ControladorAudio>();
+        if (ctrlAudio == null)
+        {
+            ctrlAudio = goAudio.AddComponent<ControladorAudio>();
+        }
+        ctrlAudio.musicaFondoNivel2 = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/Musica/musica_fondo_nivel2.wav");
+        ctrlAudio.sfxRecogerHoja = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/sfx_recoger_hoja.wav");
+        ctrlAudio.sfxDanio = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/sfx_danio.wav");
+        ctrlAudio.sfxSalto = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/sfx_salto.wav");
+        ctrlAudio.sfxCaidaVacio = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/sfx_caida_vacio.wav");
+        ctrlAudio.sfxPaso = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/sfx_paso.wav");
+        ctrlAudio.sfxVictoria = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/sfx_victoria_expediente.wav");
+
         // 2. CÁMARA (SEGUIMIENTO SUAVE CENTRADO)
         Camera cam = Camera.main;
         if (cam != null)
@@ -200,9 +219,9 @@ public static class ConfigurarNivel2Automatico
             new { Nombre = "Pista_Hoja_5_Puente", Pos = new Vector3(-33.0f, -5.2f, 0f), Num = 5, Titulo = "Bitácora de la Ruta Norte", Detalle = "Desviación no autorizada del autobús detectada." },
             new { Nombre = "Pista_Hoja_6_Estatua", Pos = new Vector3(-44.5f, -3.8f, 0f), Num = 6, Titulo = "Oficio Confidencial No. 22", Detalle = "Primeros indicios forenses vinculados a fosas del norte." },
             new { Nombre = "Pista_Hoja_7_Archivero", Pos = new Vector3(-62.0f, -4.8f, 0f), Num = 7, Titulo = "Carpeta de Denuncia Rechazada", Detalle = "Documentos institucionales que fueron archivados sin investigar." },
-            new { Nombre = "Pista_Hoja_8_Andamio", Pos = new Vector3(-64.5f, -9.0f, 0f), Num = 8, Titulo = "Informe Preliminar de San Fernando", Detalle = "Reportes que confirman hallazgos en San Fernando, Tamaulipas." },
+            new { Nombre = "Pista_Hoja_8_Andamio", Pos = new Vector3(-64.5f, -7.5f, 0f), Num = 8, Titulo = "Informe Preliminar de San Fernando", Detalle = "Reportes que confirman hallazgos en San Fernando, Tamaulipas." },
             new { Nombre = "Pista_Hoja_9_Cadenas", Pos = new Vector3(-54.0f, -15.5f, 0f), Num = 9, Titulo = "Ficha de Cotejo Forense del EAAF", Detalle = "Peritaje independiente de antropología forense." },
-            new { Nombre = "Pista_Hoja_10_Boveda_Final", Pos = new Vector3(-75.5f, -19.5f, 0f), Num = 10, Titulo = "Expediente Completo con Sello Oficial", Detalle = "¡Expediente reunido al 100%! Datos listos para la búsqueda en campo (Nivel 3)." }
+            new { Nombre = "Pista_Hoja_10_Boveda_Final", Pos = new Vector3(-73.8f, -19.2f, 0f), Num = 10, Titulo = "Expediente Completo con Sello Oficial", Detalle = "¡Expediente reunido al 100%! Datos listos para la búsqueda en campo (Nivel 3)." }
         };
 
         for (int i = 0; i < hojasInfo.Length; i++)

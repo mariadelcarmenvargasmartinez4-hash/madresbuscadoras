@@ -177,6 +177,11 @@ public class ControladorNivel2 : MonoBehaviour
 
         saludActual = Mathf.Clamp(saludActual + cantidad, 0f, saludMaxima);
 
+        if (cantidad < 0f)
+        {
+            ControladorAudio.Instancia?.ReproducirDanio();
+        }
+
         if (saludActual <= 0f)
         {
             ActivarGameOver();
@@ -191,6 +196,9 @@ public class ControladorNivel2 : MonoBehaviour
         mensajePistaActual = $"¡HOJA {hojasRecolectadas}/{totalHojas} ENCONTRADA!\n{titulo}\n\"{detalle}\"";
         temporizadorMensaje = DURACION_MENSAJE;
 
+        // Efecto sonoro de recolección de evidencia
+        ControladorAudio.Instancia?.ReproducirRecogerHoja();
+
         // Si ya recogió las 10 hojas
         if (hojasRecolectadas >= totalHojas)
         {
@@ -204,6 +212,7 @@ public class ControladorNivel2 : MonoBehaviour
         {
             estadoActual = EstadoJuego.Pausado;
             Time.timeScale = 0f;
+            ControladorAudio.Instancia?.PausarMusica();
         }
     }
 
@@ -213,6 +222,7 @@ public class ControladorNivel2 : MonoBehaviour
         {
             estadoActual = EstadoJuego.Jugando;
             Time.timeScale = 1f;
+            ControladorAudio.Instancia?.ReanudarMusica();
         }
     }
 
@@ -220,12 +230,14 @@ public class ControladorNivel2 : MonoBehaviour
     {
         estadoActual = EstadoJuego.Derrota;
         Time.timeScale = 0f;
+        ControladorAudio.Instancia?.DetenerMusica();
     }
 
     public void CompletarNivel()
     {
         estadoActual = EstadoJuego.Victoria;
         Time.timeScale = 0f;
+        ControladorAudio.Instancia?.ReproducirVictoria();
     }
 
     public void ReiniciarNivel()

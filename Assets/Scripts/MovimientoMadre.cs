@@ -220,6 +220,7 @@ public class MovimientoMadre : MonoBehaviour
         {
             ControladorNivel2.Instancia.ModificarSalud(-20f);
         }
+        ControladorAudio.Instancia?.ReproducirCaidaVacio();
         StartCoroutine(ParpadeoDanio());
     }
 
@@ -303,6 +304,8 @@ public class MovimientoMadre : MonoBehaviour
         vel.y = fuerzaSalto;
         rb.linearVelocity = vel;
 
+        ControladorAudio.Instancia?.ReproducirSalto();
+
         if (anim != null)
         {
             anim.SetTrigger("Saltar");
@@ -315,6 +318,10 @@ public class MovimientoMadre : MonoBehaviour
         {
             anim.SetFloat("Velocidad", Mathf.Abs(movimientoX));
             anim.SetBool("EnSuelo", enElSuelo);
+            if (enElSuelo && Mathf.Abs(movimientoX) > 0.01f)
+            {
+                ControladorAudio.Instancia?.ReproducirPaso();
+            }
             return;
         }
 
@@ -336,6 +343,7 @@ public class MovimientoMadre : MonoBehaviour
             {
                 temporizadorAnim = 0f;
                 pasoAlterno = !pasoAlterno;
+                ControladorAudio.Instancia?.ReproducirPaso();
             }
 
             if (pasoAlterno && spriteCaminar != null)

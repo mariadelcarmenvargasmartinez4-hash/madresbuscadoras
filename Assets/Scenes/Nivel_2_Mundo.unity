@@ -16173,7 +16173,7 @@ Transform:
   m_GameObject: {fileID: 877937016}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -75.5, y: -19.5, z: 0}
+  m_LocalPosition: {x: -73.8, y: -19.2, z: 0}
   m_LocalScale: {x: 2.2, y: 2.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24822,7 +24822,7 @@ Transform:
   m_GameObject: {fileID: 1382251926}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -64.5, y: -9, z: 0}
+  m_LocalPosition: {x: -64.5, y: -7.5, z: 0}
   m_LocalScale: {x: 1.8, y: 1.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -39108,9 +39108,65 @@ PrefabInstance:
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92a08448cd3527a4aaf11bc404e0f1a0, type: 3}
 --- !u!1660057539 &9223372036854775807
+--- !u!1 &960000150
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 960000151}
+  - component: {fileID: 960000152}
+  m_Layer: 0
+  m_Name: ControladorAudio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &960000151
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960000150}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &960000152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960000150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8b9c0d1e2f3456789a0b1c2d3e4f50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicaSource: {fileID: 0}
+  sfxSource: {fileID: 0}
+  musicaFondoNivel2: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000010, type: 3}
+  volumenMusica: 0.45
+  sfxRecogerHoja: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000020, type: 3}
+  sfxDanio: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000021, type: 3}
+  sfxSalto: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000022, type: 3}
+  sfxCaidaVacio: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000023, type: 3}
+  sfxPaso: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000024, type: 3}
+  sfxVictoria: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000025, type: 3}
+  volumenSFX: 0.85
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 960000151}
   - {fileID: 711530802}
   - {fileID: 519420032}
   - {fileID: 619394802}
