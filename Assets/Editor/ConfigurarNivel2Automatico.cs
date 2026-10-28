@@ -58,29 +58,27 @@ public static class ConfigurarNivel2Automatico
         var escenaActiva = EditorSceneManager.GetActiveScene();
         if (!escenaActiva.IsValid() || !escenaActiva.isLoaded) return;
 
-        bool faltaScene = (GameObject.Find("SCENE") == null && GameObject.Find("Tilemap") == null);
+        bool faltaScene = (GameObject.Find("Ground") == null && GameObject.Find("Tilemap") == null);
         if (faltaScene)
         {
-            Debug.LogWarning("[Nivel 2] Faltan SCENE/Tilemap en la escena activa. Clonando de forma segura desde la plantilla...");
+            Debug.LogWarning("[Nivel 2] Faltan Ground/Tilemap en la escena activa. Clonando de forma segura desde la plantilla de aldea...");
             string pathDemo = "Assets/Cainos/Pixel Art Platformer - Village Props/Scene/SC Demo Scene - Village Props.unity";
             Scene demoScene = EditorSceneManager.OpenScene(pathDemo, OpenSceneMode.Additive);
             if (demoScene.IsValid() && demoScene.isLoaded)
             {
                 foreach (GameObject rootObj in demoScene.GetRootGameObjects())
                 {
-                    if (rootObj.name == "SCENE" || rootObj.name == "Tilemap" || rootObj.name == "Ground")
+                    if (rootObj.name == "SCENE")
                     {
-                        if (GameObject.Find(rootObj.name) == null)
-                        {
-                            GameObject clon = Object.Instantiate(rootObj);
-                            clon.name = rootObj.name;
-                            SceneManager.MoveGameObjectToScene(clon, escenaActiva);
-                            Debug.Log("[Nivel 2] Escenario clonado e importado con éxito: " + clon.name);
-                        }
+                        GameObject clon = Object.Instantiate(rootObj);
+                        clon.name = "SCENE";
+                        SceneManager.MoveGameObjectToScene(clon, escenaActiva);
+                        Debug.Log("[Nivel 2] Escenario SCENE clonado e importado con éxito: " + clon.name);
                     }
                 }
                 EditorSceneManager.CloseScene(demoScene, true);
                 EditorSceneManager.MarkSceneDirty(escenaActiva);
+                EditorSceneManager.SaveScene(escenaActiva);
             }
         }
     }
@@ -188,13 +186,16 @@ public static class ConfigurarNivel2Automatico
             }
         }
 
+        Material matUnlit = AssetDatabase.GetBuiltinExtraResource<Material>("Sprites-Default.mat");
+
         if (cam != null)
         {
             cam.gameObject.tag = "MainCamera";
             cam.orthographic = true;
             cam.orthographicSize = 5f;
             cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.14f, 0.10f, 0.18f, 1f);
+            cam.backgroundColor = new Color(0.18f, 0.16f, 0.24f, 1f);
+            cam.transform.position = new Vector3(-74f, 7.5f, -10f); // Centrada en Esperanza desde el primer frame
 
             if (cam.GetComponent<AudioListener>() == null)
             {
@@ -217,7 +218,7 @@ public static class ConfigurarNivel2Automatico
             }
         }
 
-        // 3. PROTAGONISTA (MADRE BUSCADORA) - Configuración y Reaparición en 1ª Plataforma
+        // 3. PROTAGONISTA (MADRE BUSCADORA) - 100% VISIBLE Y CONFIGURADA
         GameObject goMadre = GameObject.Find("MadreBuscadora");
         Vector3 posPrimeraPlataforma = new Vector3(-74f, 6.2f, 0f);
         if (goMadre == null)
@@ -232,7 +233,7 @@ public static class ConfigurarNivel2Automatico
         if (goMadre == null)
         {
             goMadre = new GameObject("MadreBuscadora");
-            goMadre.transform.position = posPrimeraPlataforma;
+            goMadre.transform.position = new Vector3(-74f, 6.5f, 0f);
             var rb = goMadre.AddComponent<Rigidbody2D>();
             rb.freezeRotation = true;
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
@@ -240,22 +241,31 @@ public static class ConfigurarNivel2Automatico
             col.size = new Vector2(0.8f, 1.6f);
             goMadre.AddComponent<MovimientoMadre>();
             var sr = goMadre.AddComponent<SpriteRenderer>();
-            if (matDefault != null) sr.sharedMaterial = matDefault;
-            sr.sortingOrder = 15;
+            sr.sortingOrder = 25;
         }
+
+        Sprite spMadreIdle = CargarSpriteRobusto("Assets/Animacion/Madre_Idle.png", "Madre_Idle");
+        Sprite spMadreCaminar = CargarSpriteRobusto("Assets/Animacion/Madre_Caminar.png", "Madre_Caminar");
+        Sprite spMadreSaltar = CargarSpriteRobusto("Assets/Animacion/Madre_Saltar.png", "Madre_Saltar");
 
         if (goMadre != null)
         {
+            goMadre.transform.position = new Vector3(-74f, 6.2f, 0f);
+            goMadre.transform.localScale = new Vector3(0.24f, 0.24f, 1f);
+
             var srMadre = goMadre.GetComponent<SpriteRenderer>();
-            if (srMadre != null && matDefault != null)
-            {
-                srMadre.sharedMaterial = matDefault;
-                srMadre.sortingOrder = 15;
-            }
+            if (srMadre == null) srMadre = goMadre.AddComponent<SpriteRenderer>();
+            if (spMadreIdle != null) srMadre.sprite = spMadreIdle;
+            if (matUnlit != null) srMadre.sharedMaterial = matUnlit; // Shader Unlit: brillante y visible
+            srMadre.sortingOrder = 25; // Por delante de plataformas y fondos
+            srMadre.color = Color.white;
 
             var movMadre = goMadre.GetComponent<MovimientoMadre>();
             if (movMadre != null)
             {
+                movMadre.spriteIdle = spMadreIdle;
+                movMadre.spriteCaminar = spMadreCaminar;
+                movMadre.spriteSaltar = spMadreSaltar;
                 movMadre.posicionPrimeraPlataforma = posPrimeraPlataforma;
                 movMadre.fuerzaSalto = 11.8f;
             }
@@ -271,8 +281,7 @@ public static class ConfigurarNivel2Automatico
             }
         }
 
-        // 4. FONDO TEMÁTICO DE SAN LUIS DE LA PAZ Y SIERRA DE GUANAJUATO CON PARALLAX
-        // Limpiar objetos antiguos o duplicados de fondo
+        // 4. FONDO TEMÁTICO DE SAN LUIS DE LA PAZ - CUBRE TODO EL NIVEL AL 100%
         string[] fondosAntiguos = new string[] { "FondoEscenario", "Fondo_Cielo_Horizonte", "Fondo_Burocracia_SanLuis", "Fondo_Cueva_Profunda" };
         foreach (string nom in fondosAntiguos)
         {
@@ -280,7 +289,6 @@ public static class ConfigurarNivel2Automatico
             if (objF != null) Object.DestroyImmediate(objF);
         }
 
-        // Cargar el fondo temático auténtico de San Luis de la Paz (Registro Civil, Municipalidad, Ayuntamiento)
         Sprite spriteFondoTematico = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/imagen/fondo_san_luis_de_la_paz.jpg");
         if (spriteFondoTematico == null)
         {
@@ -296,25 +304,24 @@ public static class ConfigurarNivel2Automatico
             GameObject goFondo = GameObject.Find("Fondo_Tematico_SanLuis");
             if (goFondo == null) goFondo = new GameObject("Fondo_Tematico_SanLuis");
 
-            // Posicionamiento calculado para que el adoquinado y las fachadas de San Luis de la Paz
-            // (Registro Civil, Municipalidad) queden exactamente a la altura de la calle principal (Y = 6.0)
-            goFondo.transform.position = new Vector3(-46.5f, 17.5f, 10f);
-            goFondo.transform.localScale = Vector3.one; // Escala nativa 1:1 pixel art sin deformaciones ni borrosidad
+            // Centrado exactamente para abarcar todo el nivel (X = -48, Y = -7)
+            // Cubre ampliamente desde X = -88 hasta -8 y de Y = -27 hasta +13
+            // Ninguna plataforma, botella o coleccionable quedará fuera del fondo
+            goFondo.transform.position = new Vector3(-48f, -7f, 15f);
+            goFondo.transform.localScale = new Vector3(1.85f, 1.65f, 1f);
 
             var srFondo = goFondo.GetComponent<SpriteRenderer>();
             if (srFondo == null) srFondo = goFondo.AddComponent<SpriteRenderer>();
             srFondo.sprite = spriteFondoTematico;
             srFondo.sortingOrder = -90; // Detrás del mundo y de las plataformas
-            
-            Material matUnlit = AssetDatabase.GetBuiltinExtraResource<Material>("Sprites-Default.mat");
-            if (matUnlit != null) srFondo.sharedMaterial = matUnlit; // Material Unlit nítido y brillante
+            if (matUnlit != null) srFondo.sharedMaterial = matUnlit;
             srFondo.color = Color.white;
 
             var parFondo = goFondo.GetComponent<FondoParallax>();
-            if (parFondo == null) parFondo = goFondo.AddComponent<FondoParallax>();
-            parFondo.factorX = 0.12f; // Desplazamiento horizontal muy sutil y natural
-            parFondo.factorY = 0f;    // Y anclada a la calle para no distorsionar la altura
-            parFondo.ordenRenderizado = -90;
+            if (parFondo != null)
+            {
+                Object.DestroyImmediate(parFondo); // Fondo fijado permanentemente detrás de la escena
+            }
         }
 
         // 5. CARGAR SPRITES DE LAS HOJAS, PICOS, PLATAFORMAS Y ANTORCHAS
@@ -630,5 +637,25 @@ public static class ConfigurarNivel2Automatico
                 "• 10 Hojas de expediente accesibles y música ambiental conectada.\n\n" +
                 "¡Presiona el botón Play (▶️) para jugar!", "¡Aceptar!");
         }
+    }
+
+    private static Sprite CargarSpriteRobusto(string rutaAsset, string nombreResources)
+    {
+        Object[] allAssets = AssetDatabase.LoadAllAssetsAtPath(rutaAsset);
+        if (allAssets != null)
+        {
+            foreach (var obj in allAssets)
+            {
+                if (obj is Sprite sp) return sp;
+            }
+        }
+        if (!string.IsNullOrEmpty(nombreResources))
+        {
+            Sprite[] resSprites = Resources.LoadAll<Sprite>(nombreResources);
+            if (resSprites != null && resSprites.Length > 0) return resSprites[0];
+            Sprite singleRes = Resources.Load<Sprite>(nombreResources);
+            if (singleRes != null) return singleRes;
+        }
+        return null;
     }
 }

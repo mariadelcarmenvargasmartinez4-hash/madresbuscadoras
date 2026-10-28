@@ -59,12 +59,38 @@ public class MovimientoMadre : MonoBehaviour
             rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
 
-        if (sr != null && spriteIdle != null && sr.sprite == null)
+        if (sr != null)
         {
-            sr.sprite = spriteIdle;
+            if (spriteIdle == null) spriteIdle = CargarSpriteRobusto("Madre_Idle");
+            if (spriteCaminar == null) spriteCaminar = CargarSpriteRobusto("Madre_Caminar");
+            if (spriteSaltar == null) spriteSaltar = CargarSpriteRobusto("Madre_Saltar");
+
+            if (sr.sprite == null && spriteIdle != null)
+            {
+                sr.sprite = spriteIdle;
+            }
+
+            sr.sortingOrder = 25; // Por delante de plataformas y fondos
+            sr.color = Color.white;
+            var matUnlit = Shader.Find("Sprites/Default");
+            if (matUnlit != null) sr.sharedMaterial = new Material(matUnlit);
+        }
+
+        if (transform.localScale.x > 0.5f)
+        {
+            transform.localScale = new Vector3(0.24f, 0.24f, 1f);
         }
 
         ControladorNivel2.AsegurarInstancia();
+    }
+
+    private Sprite CargarSpriteRobusto(string nombre)
+    {
+        Sprite[] sprites = Resources.LoadAll<Sprite>(nombre);
+        if (sprites != null && sprites.Length > 0) return sprites[0];
+        Sprite sp = Resources.Load<Sprite>(nombre);
+        if (sp != null) return sp;
+        return null;
     }
 
     [Header("Punto de Reaparición")]
