@@ -280,32 +280,40 @@ public static class ConfigurarNivel2Automatico
             if (objF != null) Object.DestroyImmediate(objF);
         }
 
-        Sprite spriteFondoTematico = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/imagen/fondo_nivel2_tematico.jpg");
+        // Cargar el fondo temático auténtico de San Luis de la Paz (Registro Civil, Municipalidad, Ayuntamiento)
+        Sprite spriteFondoTematico = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/imagen/fondo_san_luis_de_la_paz.jpg");
         if (spriteFondoTematico == null)
         {
-            spriteFondoTematico = Resources.Load<Sprite>("fondo_nivel2_tematico");
+            spriteFondoTematico = Resources.Load<Sprite>("fondo_san_luis_de_la_paz");
+        }
+        if (spriteFondoTematico == null)
+        {
+            spriteFondoTematico = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/imagen/fondo_nivel2_tematico.jpg");
         }
 
         if (spriteFondoTematico != null)
         {
             GameObject goFondo = GameObject.Find("Fondo_Tematico_SanLuis");
             if (goFondo == null) goFondo = new GameObject("Fondo_Tematico_SanLuis");
-            // Posicionamiento calculado para que los edificios coloniales, la iglesia y los carteles de búsqueda
-            // queden exactamente a la altura de la calle y de los ojos del jugador (Y = 6 a 12), con montañas de fondo
-            goFondo.transform.position = new Vector3(-47.5f, 14.0f, 25f);
-            goFondo.transform.localScale = new Vector3(68f, 38f, 1f);
+
+            // Posicionamiento calculado para que el adoquinado y las fachadas de San Luis de la Paz
+            // (Registro Civil, Municipalidad) queden exactamente a la altura de la calle principal (Y = 6.0)
+            goFondo.transform.position = new Vector3(-46.5f, 17.5f, 10f);
+            goFondo.transform.localScale = Vector3.one; // Escala nativa 1:1 pixel art sin deformaciones ni borrosidad
 
             var srFondo = goFondo.GetComponent<SpriteRenderer>();
             if (srFondo == null) srFondo = goFondo.AddComponent<SpriteRenderer>();
             srFondo.sprite = spriteFondoTematico;
-            srFondo.sortingOrder = -90;
-            if (matDefault != null) srFondo.sharedMaterial = matDefault;
+            srFondo.sortingOrder = -90; // Detrás del mundo y de las plataformas
+            
+            Material matUnlit = AssetDatabase.GetBuiltinExtraResource<Material>("Sprites-Default.mat");
+            if (matUnlit != null) srFondo.sharedMaterial = matUnlit; // Material Unlit nítido y brillante
             srFondo.color = Color.white;
 
             var parFondo = goFondo.GetComponent<FondoParallax>();
             if (parFondo == null) parFondo = goFondo.AddComponent<FondoParallax>();
-            parFondo.factorX = 0.20f;
-            parFondo.factorY = 0.03f;
+            parFondo.factorX = 0.12f; // Desplazamiento horizontal muy sutil y natural
+            parFondo.factorY = 0f;    // Y anclada a la calle para no distorsionar la altura
             parFondo.ordenRenderizado = -90;
         }
 
