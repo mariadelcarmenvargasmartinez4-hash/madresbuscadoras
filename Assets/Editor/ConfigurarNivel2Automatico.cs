@@ -317,46 +317,23 @@ public static class ConfigurarNivel2Automatico
             }
         }
 
-        // 4. FONDO TEMÁTICO DE SAN LUIS DE LA PAZ - CUBRE TODO EL NIVEL AL 100%
-        string[] fondosAntiguos = new string[] { "FondoEscenario", "Fondo_Cielo_Horizonte", "Fondo_Burocracia_SanLuis", "Fondo_Cueva_Profunda" };
+        // 4. ELIMINAR CUALQUIER FONDO DE MONTAÑAS / IMAGEN QUE CUBRA EL CAMINO (fondo_san_luis_de_la_paz)
+        string[] fondosAntiguos = new string[] { "FondoEscenario", "Fondo_Cielo_Horizonte", "Fondo_Burocracia_SanLuis", "Fondo_Cueva_Profunda", "Fondo_Tematico_SanLuis" };
         foreach (string nom in fondosAntiguos)
         {
             GameObject objF = GameObject.Find(nom);
             if (objF != null) Object.DestroyImmediate(objF);
         }
 
-        Sprite spriteFondoTematico = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/imagen/fondo_san_luis_de_la_paz.jpg");
-        if (spriteFondoTematico == null)
+        // Asegurar que el fondo neutro de la escena (Background) esté activo detrás de las casitas
+        GameObject goFondoNeutral = GameObject.Find("Background");
+        if (goFondoNeutral != null)
         {
-            spriteFondoTematico = Resources.Load<Sprite>("fondo_san_luis_de_la_paz");
-        }
-        if (spriteFondoTematico == null)
-        {
-            spriteFondoTematico = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/imagen/fondo_nivel2_tematico.jpg");
-        }
-
-        if (spriteFondoTematico != null)
-        {
-            GameObject goFondo = GameObject.Find("Fondo_Tematico_SanLuis");
-            if (goFondo == null) goFondo = new GameObject("Fondo_Tematico_SanLuis");
-
-            // Centrado exactamente para abarcar todo el nivel (X = -48, Y = -7)
-            // Cubre ampliamente desde X = -88 hasta -8 y de Y = -27 hasta +13
-            // Ninguna plataforma, botella o coleccionable quedará fuera del fondo
-            goFondo.transform.position = new Vector3(-48f, -7f, 15f);
-            goFondo.transform.localScale = new Vector3(1.85f, 1.65f, 1f);
-
-            var srFondo = goFondo.GetComponent<SpriteRenderer>();
-            if (srFondo == null) srFondo = goFondo.AddComponent<SpriteRenderer>();
-            srFondo.sprite = spriteFondoTematico;
-            srFondo.sortingOrder = -90; // Detrás del mundo y de las plataformas
-            if (matUnlit != null) srFondo.sharedMaterial = matUnlit;
-            srFondo.color = Color.white;
-
-            var parFondo = goFondo.GetComponent<FondoParallax>();
-            if (parFondo != null)
+            goFondoNeutral.SetActive(true);
+            var srBg = goFondoNeutral.GetComponent<SpriteRenderer>();
+            if (srBg != null)
             {
-                Object.DestroyImmediate(parFondo); // Fondo fijado permanentemente detrás de la escena
+                srBg.sortingOrder = -100; // Al fondo absoluto, detrás de las casas (-5) y del camino (0)
             }
         }
 
