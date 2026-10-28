@@ -25,6 +25,7 @@ public class ControladorAudio : MonoBehaviour
     public AudioClip sfxCaidaVacio;
     public AudioClip sfxPaso;
     public AudioClip sfxVictoria;
+    public AudioClip sfxBeberAgua;
     [Range(0f, 1f)]
     public float volumenSFX = 0.85f;
 
@@ -55,6 +56,7 @@ public class ControladorAudio : MonoBehaviour
         if (sfxCaidaVacio == null) sfxCaidaVacio = Resources.Load<AudioClip>("Audio/SFX/sfx_caida_vacio");
         if (sfxPaso == null) sfxPaso = Resources.Load<AudioClip>("Audio/SFX/sfx_paso");
         if (sfxVictoria == null) sfxVictoria = Resources.Load<AudioClip>("Audio/SFX/sfx_victoria_expediente");
+        if (sfxBeberAgua == null) sfxBeberAgua = Resources.Load<AudioClip>("Audio/SFX/sfx_beber_agua");
     }
 
     void Start()
@@ -164,6 +166,11 @@ public class ControladorAudio : MonoBehaviour
     {
         DetenerMusica();
         ReproducirSFX(sfxVictoria, 1.2f);
+    }
+
+    public void ReproducirBeberAgua()
+    {
+        ReproducirSFX(sfxBeberAgua, 1.0f);
     }
 
     public void CambiarVolumenMusica(float nuevoVolumen)

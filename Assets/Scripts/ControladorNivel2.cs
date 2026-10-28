@@ -188,6 +188,20 @@ public class ControladorNivel2 : MonoBehaviour
         }
     }
 
+    public bool ConsumirBotellaAgua(float cantidadRecuperar = 25f)
+    {
+        if (estadoActual != EstadoJuego.Jugando) return false;
+
+        saludActual = Mathf.Clamp(saludActual + cantidadRecuperar, 0f, saludMaxima);
+
+        ControladorAudio.Instancia?.ReproducirBeberAgua();
+
+        mensajePistaActual = $"💧 ¡BOTELLA DE AGUA FRESCA RECOGIDA!\n+{(int)cantidadRecuperar} de Ánimo recuperado para continuar la búsqueda.";
+        temporizadorMensaje = 4.5f;
+
+        return true;
+    }
+
     public void RecolectarHoja(int numero, string titulo, string detalle)
     {
         if (estadoActual != EstadoJuego.Jugando) return;

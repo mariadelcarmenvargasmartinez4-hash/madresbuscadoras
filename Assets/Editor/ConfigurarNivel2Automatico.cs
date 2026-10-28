@@ -108,6 +108,7 @@ public static class ConfigurarNivel2Automatico
         ctrlAudio.sfxCaidaVacio = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/sfx_caida_vacio.wav");
         ctrlAudio.sfxPaso = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/sfx_paso.wav");
         ctrlAudio.sfxVictoria = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/sfx_victoria_expediente.wav");
+        ctrlAudio.sfxBeberAgua = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/sfx_beber_agua.wav");
 
         // 2. CÁMARA (SEGUIMIENTO SUAVE CENTRADO)
         Camera cam = Camera.main;
@@ -152,38 +153,78 @@ public static class ConfigurarNivel2Automatico
             }
         }
 
-        // 4. FONDO TEMÁTICO CON PARALLAX
-        Sprite spriteFondo = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/imagen/madre_buscadora_escena.png");
-        if (spriteFondo == null)
+        // 4. FONDO TEMÁTICO MULTICAPA CON PARALLAX (SAN LUIS DE LA PAZ Y BUROCRACIA)
+        // Destruir objeto de fondo antiguo si existe
+        GameObject goFondoAntiguo = GameObject.Find("FondoEscenario");
+        if (goFondoAntiguo != null) Object.DestroyImmediate(goFondoAntiguo);
+
+        Sprite spriteEscena = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/imagen/madre_buscadora_escena.png");
+        Sprite spriteSanLuis = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/imagen/fondo_san_luis_de_la_paz.jpg");
+
+        // 4.1 CAPA 1: CIELO Y HORIZONTE LEJANO (Desierto y colinas de Guanajuato)
+        if (spriteEscena != null)
         {
-            Object[] assets = AssetDatabase.LoadAllAssetsAtPath("Assets/imagen/madre_buscadora_escena.png");
-            foreach (var a in assets)
-            {
-                if (a is Sprite sp) { spriteFondo = sp; break; }
-            }
+            GameObject goCielo = GameObject.Find("Fondo_Cielo_Horizonte");
+            if (goCielo == null) goCielo = new GameObject("Fondo_Cielo_Horizonte");
+            goCielo.transform.position = new Vector3(-45f, 6.0f, 25f);
+            goCielo.transform.localScale = new Vector3(28f, 18f, 1f);
+
+            var srCielo = goCielo.GetComponent<SpriteRenderer>();
+            if (srCielo == null) srCielo = goCielo.AddComponent<SpriteRenderer>();
+            srCielo.sprite = spriteEscena;
+            srCielo.sortingOrder = -100;
+            if (matDefault != null) srCielo.sharedMaterial = matDefault;
+            srCielo.color = new Color(0.58f, 0.58f, 0.68f, 0.85f);
+
+            var parCielo = goCielo.GetComponent<FondoParallax>();
+            if (parCielo == null) parCielo = goCielo.AddComponent<FondoParallax>();
+            parCielo.factorX = 0.85f;
+            parCielo.factorY = 0.75f;
+            parCielo.ordenRenderizado = -100;
         }
 
-        if (spriteFondo != null)
+        // 4.2 CAPA 2: EDIFICIOS INSTITUCIONALES DE SAN LUIS DE LA PAZ (Puertas cerradas y Registro)
+        if (spriteSanLuis != null)
         {
-            GameObject goFondo = GameObject.Find("FondoEscenario");
-            if (goFondo == null)
-            {
-                goFondo = new GameObject("FondoEscenario");
-            }
-            goFondo.transform.position = new Vector3(-45f, -7f, 15f);
-            goFondo.transform.localScale = new Vector3(16f, 16f, 1f);
+            GameObject goSanLuis = GameObject.Find("Fondo_Burocracia_SanLuis");
+            if (goSanLuis == null) goSanLuis = new GameObject("Fondo_Burocracia_SanLuis");
+            goSanLuis.transform.position = new Vector3(-45f, -1.0f, 16f);
+            goSanLuis.transform.localScale = new Vector3(26f, 15f, 1f);
 
-            var srFondo = goFondo.GetComponent<SpriteRenderer>();
-            if (srFondo == null) srFondo = goFondo.AddComponent<SpriteRenderer>();
-            srFondo.sprite = spriteFondo;
-            srFondo.sortingOrder = -100;
-            if (matDefault != null) srFondo.sharedMaterial = matDefault;
-            srFondo.color = new Color(0.85f, 0.85f, 0.9f, 0.9f);
+            var srSanLuis = goSanLuis.GetComponent<SpriteRenderer>();
+            if (srSanLuis == null) srSanLuis = goSanLuis.AddComponent<SpriteRenderer>();
+            srSanLuis.sprite = spriteSanLuis;
+            srSanLuis.sortingOrder = -80;
+            if (matDefault != null) srSanLuis.sharedMaterial = matDefault;
+            srSanLuis.color = new Color(0.85f, 0.85f, 0.90f, 0.95f);
 
-            var parallax = goFondo.GetComponent<FondoParallax>();
-            if (parallax == null) parallax = goFondo.AddComponent<FondoParallax>();
-            parallax.factorX = 0.7f;
-            parallax.factorY = 0.5f;
+            var parSanLuis = goSanLuis.GetComponent<FondoParallax>();
+            if (parSanLuis == null) parSanLuis = goSanLuis.AddComponent<FondoParallax>();
+            parSanLuis.factorX = 0.65f;
+            parSanLuis.factorY = 0.45f;
+            parSanLuis.ordenRenderizado = -80;
+        }
+
+        // 4.3 CAPA 3: FONDO PROFUNDO SUBTERRÁNEO (Archivos sepultados y bóveda)
+        if (spriteEscena != null)
+        {
+            GameObject goCueva = GameObject.Find("Fondo_Cueva_Profunda");
+            if (goCueva == null) goCueva = new GameObject("Fondo_Cueva_Profunda");
+            goCueva.transform.position = new Vector3(-58f, -14.0f, 12f);
+            goCueva.transform.localScale = new Vector3(26f, 16f, 1f);
+
+            var srCueva = goCueva.GetComponent<SpriteRenderer>();
+            if (srCueva == null) srCueva = goCueva.AddComponent<SpriteRenderer>();
+            srCueva.sprite = spriteEscena;
+            srCueva.sortingOrder = -70;
+            if (matDefault != null) srCueva.sharedMaterial = matDefault;
+            srCueva.color = new Color(0.18f, 0.20f, 0.26f, 0.92f);
+
+            var parCueva = goCueva.GetComponent<FondoParallax>();
+            if (parCueva == null) parCueva = goCueva.AddComponent<FondoParallax>();
+            parCueva.factorX = 0.50f;
+            parCueva.factorY = 0.35f;
+            parCueva.ordenRenderizado = -70;
         }
 
         // 5. CARGAR SPRITES DE LAS HOJAS, PICOS, PLATAFORMAS Y ANTORCHAS
@@ -436,6 +477,44 @@ public static class ConfigurarNivel2Automatico
             obsScript.danio = 20f;
             obsScript.fuerzaRebote = 4.5f;
             obsScript.intervaloDanio = 1.2f;
+        }
+
+        // 10. ÍTEMS CONSUMIBLES: BOTELLAS DE AGUA PARA RECUPERAR SALUD/ÁNIMO (+25)
+        Sprite spriteBotella = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/imagen/botella_agua.png");
+
+        var botellasInfo = new[]
+        {
+            new { Nombre = "Botella_Agua_1_Superficie", Pos = new Vector3(-38.5f, 6.2f, 0f) },
+            new { Nombre = "Botella_Agua_2_Registro", Pos = new Vector3(-28.0f, 1.4f, 0f) },
+            new { Nombre = "Botella_Agua_3_Cueva", Pos = new Vector3(-59.0f, -14.2f, 0f) }
+        };
+
+        foreach (var b in botellasInfo)
+        {
+            GameObject goBotella = GameObject.Find(b.Nombre);
+            if (goBotella == null)
+            {
+                goBotella = new GameObject(b.Nombre);
+            }
+            goBotella.transform.position = b.Pos;
+            goBotella.transform.localScale = new Vector3(1.5f, 1.5f, 1f);
+
+            var srBotella = goBotella.GetComponent<SpriteRenderer>();
+            if (srBotella == null) srBotella = goBotella.AddComponent<SpriteRenderer>();
+            if (spriteBotella != null) srBotella.sprite = spriteBotella;
+            if (matDefault != null) srBotella.sharedMaterial = matDefault;
+            srBotella.sortingOrder = 17;
+
+            var colBotella = goBotella.GetComponent<BoxCollider2D>();
+            if (colBotella == null) colBotella = goBotella.AddComponent<BoxCollider2D>();
+            colBotella.isTrigger = true;
+            colBotella.size = new Vector2(0.7f, 0.9f);
+
+            var itemBotella = goBotella.GetComponent<ItemBotellaAgua>();
+            if (itemBotella == null) itemBotella = goBotella.AddComponent<ItemBotellaAgua>();
+            itemBotella.saludRestaurada = 25f;
+            itemBotella.velocidadFlotacion = 2.4f;
+            itemBotella.amplitudFlotacion = 0.12f;
         }
 
         EditorSceneManager.MarkSceneDirty(escenaActiva);
