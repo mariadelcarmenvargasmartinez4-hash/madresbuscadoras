@@ -679,22 +679,25 @@ public static class ConfigurarNivel2Automatico
             itemBotella.amplitudFlotacion = 0.12f;
         }
 
+        // 11. DECORACIÓN DE FONDO CON EDIFICIOS MODULARES COLONIALES DE SAN LUIS DE LA PAZ
+        CreadorPaletaEdificiosModulares.DecorarEscenaConEdificios();
+
         EditorSceneManager.MarkSceneDirty(escenaActiva);
         EditorSceneManager.SaveScene(escenaActiva);
 
-        Debug.Log("[Nivel 2] ¡Entrada subterránea abierta y puentes conectados para las 10 hojas!");
+        Debug.Log("[Nivel 2] ¡Entrada subterránea abierta, puentes conectados y fondo enriquecido con arquitectura colonial!");
 
         if (mostrarDialogo)
         {
             EditorUtility.DisplayDialog("Nivel 2 - Todo Listo para Jugar",
                 "¡El Nivel 2 ha sido reparado y configurado al 100%!\n\n" +
                 "• Escena activa: " + escenaActiva.name + "\n" +
-                "• Cámara Principal (Main Camera) activa y siguiendo a Esperanza.\n" +
-                "• Madre Buscadora (Esperanza) ubicada en la plataforma de inicio.\n" +
-                "• Escenario, calles, suelo y cuevas (Tilemap) restaurados.\n" +
-                "• Fondo temático panorámico de San Luis de la Paz al atardecer.\n" +
-                "• 3 Botellas de agua para recuperar salud (+25 c/u) sobre plataformas.\n" +
-                "• 10 Hojas de expediente accesibles y música ambiental conectada.\n\n" +
+                "• Cámara Principal activa y siguiendo a Esperanza.\n" +
+                "• Escenario, calles, cuevas y puentes despejados al 100%.\n" +
+                "• Fondos enriquecidos con fachadas, arcos y balcones coloniales.\n" +
+                "• Tile Palette de edificios modulares disponible en Window -> 2D -> Tile Palette.\n" +
+                "• 3 Botellas de agua para recuperar salud (+25 c/u).\n" +
+                "• 10 Hojas de expediente 100% accesibles.\n\n" +
                 "¡Presiona el botón Play (▶️) para jugar!", "¡Aceptar!");
         }
     }

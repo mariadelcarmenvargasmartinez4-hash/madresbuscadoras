@@ -1,0 +1,767 @@
+fileFormatVersion: 2
+guid: 3f9a7b2c1d8e456098712345abcdef01
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: Arco_Triple_Colonial
+  - first:
+      213: 21300002
+    second: Columna_Pilar_Arco
+  - first:
+      213: 21300004
+    second: Arco_Piedra_MedioPunto
+  - first:
+      213: 21300006
+    second: Arco_Cantera_Mixtilineo
+  - first:
+      213: 21300008
+    second: Mensula_Hierro_Forjado
+  - first:
+      213: 21300010
+    second: Balcon_Cantera_Hierro
+  - first:
+      213: 21300012
+    second: Mirador_Balcon_Madera
+  - first:
+      213: 21300014
+    second: Barandal_Hierro_Curvo
+  - first:
+      213: 21300016
+    second: Barandal_Hierro_Largo
+  - first:
+      213: 21300018
+    second: Ventanal_Mirador_Madera
+  - first:
+      213: 21300020
+    second: Ventana_Lattice_Plomada
+  - first:
+      213: 21300022
+    second: Ventana_Tragaluz_Horizontal
+  - first:
+      213: 21300024
+    second: Oculo_Cantera_Reja
+  - first:
+      213: 21300026
+    second: Oculo_Cantera_Madera
+  - first:
+      213: 21300028
+    second: Ventana_Cantera_Balconcillo
+  - first:
+      213: 21300030
+    second: Ventana_Balcon_Puerta
+  - first:
+      213: 21300032
+    second: Ventana_Madera_Cuadros
+  - first:
+      213: 21300034
+    second: Ventana_Cantera_Vidrio
+  - first:
+      213: 21300036
+    second: Mirador_Madera_Panel
+  - first:
+      213: 21300038
+    second: Puerta_Doble_Tallada
+  - first:
+      213: 21300040
+    second: Puerta_Madera_Simple
+  - first:
+      213: 21300042
+    second: Fachada_Amarilla_Completa
+  - first:
+      213: 21300044
+    second: Fachada_Roja_Completa
+  - first:
+      213: 21300046
+    second: Fachada_Azul_Puerta
+  - first:
+      213: 21300048
+    second: Rejas_Hierro_Ventana
+  - first:
+      213: 21300050
+    second: Azulejos_Talavera_Guanajuato
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Arco_Triple_Colonial
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 548
+        width: 307
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d57692d1a35454e88406a5696240ffc0
+      internalID: 21300000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Columna_Pilar_Arco
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 548
+        width: 45
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a058093657645098906dc537c60c851a
+      internalID: 21300002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Arco_Piedra_MedioPunto
+      rect:
+        serializedVersion: 2
+        x: 427
+        y: 556
+        width: 83
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1eaaa2b986de52c6b767098df7f483ac
+      internalID: 21300004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Arco_Cantera_Mixtilineo
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 557
+        width: 90
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aeae16a207e5574b87c03abc2053d46a
+      internalID: 21300006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mensula_Hierro_Forjado
+      rect:
+        serializedVersion: 2
+        x: 636
+        y: 556
+        width: 104
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83abc48721435d9197e92b18b810dfb0
+      internalID: 21300008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Balcon_Cantera_Hierro
+      rect:
+        serializedVersion: 2
+        x: 740
+        y: 557
+        width: 110
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a51dfb8d4c65ec999e7e7913752f889
+      internalID: 21300010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mirador_Balcon_Madera
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 555
+        width: 115
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3901dcd881ac5959b87def750155733d
+      internalID: 21300012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barandal_Hierro_Curvo
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 468
+        width: 88
+        height: 61
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e558e7aeb61d5b0c9cb9534d1af6a7d2
+      internalID: 21300014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barandal_Hierro_Largo
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 450
+        width: 173
+        height: 87
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a9db11b44845b95a4d27e16454d2562
+      internalID: 21300016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ventanal_Mirador_Madera
+      rect:
+        serializedVersion: 2
+        x: 380
+        y: 470
+        width: 120
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: beb64e9b9865595a9d8cb710946bfb62
+      internalID: 21300018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ventana_Lattice_Plomada
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 472
+        width: 105
+        height: 58
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59fcadb969155a99811d2acfee98b6de
+      internalID: 21300020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ventana_Tragaluz_Horizontal
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 486
+        width: 136
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5cb330f38b057b081594cc8b2da576d
+      internalID: 21300022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oculo_Cantera_Reja
+      rect:
+        serializedVersion: 2
+        x: 790
+        y: 460
+        width: 80
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1096359941cd59289e8a8027e27bab6b
+      internalID: 21300024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oculo_Cantera_Madera
+      rect:
+        serializedVersion: 2
+        x: 880
+        y: 476
+        width: 80
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c7b2072a61d5f019d7593bb29b7d289
+      internalID: 21300026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ventana_Cantera_Balconcillo
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 294
+        width: 98
+        height: 146
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc6cdddb912052beb0ba3e59aa00299f
+      internalID: 21300028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ventana_Balcon_Puerta
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 294
+        width: 98
+        height: 146
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9921e9b686ba5d209b1e434ba6b4aeee
+      internalID: 21300030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ventana_Madera_Cuadros
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 293
+        width: 84
+        height: 142
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e72b86b1b4d95205933c92c64f569e25
+      internalID: 21300032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ventana_Cantera_Vidrio
+      rect:
+        serializedVersion: 2
+        x: 498
+        y: 291
+        width: 107
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39455c68dd55504aad70c0fbe96f2c3b
+      internalID: 21300034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mirador_Madera_Panel
+      rect:
+        serializedVersion: 2
+        x: 649
+        y: 276
+        width: 131
+        height: 179
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e2eb6ef97d75d2ba3ed30531157b3c2
+      internalID: 21300036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Puerta_Doble_Tallada
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 286
+        width: 95
+        height: 149
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd500b29cde455139ddd5aca93bb138c
+      internalID: 21300038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Puerta_Madera_Simple
+      rect:
+        serializedVersion: 2
+        x: 875
+        y: 295
+        width: 85
+        height: 140
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd920a81ca215caaaa329808d10f8e85
+      internalID: 21300040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fachada_Amarilla_Completa
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 16
+        width: 272
+        height: 249
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5971486fbbe563190aafb462e925b5a
+      internalID: 21300042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fachada_Roja_Completa
+      rect:
+        serializedVersion: 2
+        x: 325
+        y: 18
+        width: 280
+        height: 247
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 111d211ecc3859659b8e8eab3c3f01b8
+      internalID: 21300044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fachada_Azul_Puerta
+      rect:
+        serializedVersion: 2
+        x: 628
+        y: 16
+        width: 147
+        height: 129
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7787e7f8612d522eaff0fd99b5c75178
+      internalID: 21300046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rejas_Hierro_Ventana
+      rect:
+        serializedVersion: 2
+        x: 629
+        y: 145
+        width: 146
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b97cb391ffdd59c883708cfbefa948fa
+      internalID: 21300048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Azulejos_Talavera_Guanajuato
+      rect:
+        serializedVersion: 2
+        x: 785
+        y: 140
+        width: 175
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6f5e31d0e3f5177a3a31fe30cc963ab
+      internalID: 21300050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Arco_Triple_Colonial: 21300000
+      Columna_Pilar_Arco: 21300002
+      Arco_Piedra_MedioPunto: 21300004
+      Arco_Cantera_Mixtilineo: 21300006
+      Mensula_Hierro_Forjado: 21300008
+      Balcon_Cantera_Hierro: 21300010
+      Mirador_Balcon_Madera: 21300012
+      Barandal_Hierro_Curvo: 21300014
+      Barandal_Hierro_Largo: 21300016
+      Ventanal_Mirador_Madera: 21300018
+      Ventana_Lattice_Plomada: 21300020
+      Ventana_Tragaluz_Horizontal: 21300022
+      Oculo_Cantera_Reja: 21300024
+      Oculo_Cantera_Madera: 21300026
+      Ventana_Cantera_Balconcillo: 21300028
+      Ventana_Balcon_Puerta: 21300030
+      Ventana_Madera_Cuadros: 21300032
+      Ventana_Cantera_Vidrio: 21300034
+      Mirador_Madera_Panel: 21300036
+      Puerta_Doble_Tallada: 21300038
+      Puerta_Madera_Simple: 21300040
+      Fachada_Amarilla_Completa: 21300042
+      Fachada_Roja_Completa: 21300044
+      Fachada_Azul_Puerta: 21300046
+      Rejas_Hierro_Ventana: 21300048
+      Azulejos_Talavera_Guanajuato: 21300050
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
