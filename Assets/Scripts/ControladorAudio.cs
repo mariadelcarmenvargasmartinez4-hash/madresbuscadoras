@@ -29,6 +29,10 @@ public class ControladorAudio : MonoBehaviour
     [Range(0f, 1f)]
     public float volumenSFX = 0.85f;
 
+    [Header("Estado de Audio")]
+    [Tooltip("Indica si el sonido ha sido silenciado (quitar sonido)")]
+    public bool sonidoSilenciado = false;
+
     private float tiempoUltimoPaso = 0f;
 
     void Awake()
@@ -61,7 +65,51 @@ public class ControladorAudio : MonoBehaviour
 
     void Start()
     {
-        ReproducirMusicaFondo();
+        // Cargar preferencia guardada de sonido (0 = activo, 1 = silenciado)
+        sonidoSilenciado = PlayerPrefs.GetInt("SonidoSilenciado", 0) == 1;
+        SilenciarSonido(sonidoSilenciado);
+
+        if (!sonidoSilenciado)
+        {
+            ReproducirMusicaFondo();
+        }
+    }
+
+    /// <summary>
+    /// Alterna el estado de sonido entre activado y silenciado (Quitar sonido).
+    /// </summary>
+    public void AlternarSonido()
+    {
+        SilenciarSonido(!sonidoSilenciado);
+    }
+
+    /// <summary>
+    /// Silencia o activa todo el audio del juego (Música de fondo, efectos de sonido y pasos).
+    /// </summary>
+    public void SilenciarSonido(bool silenciar)
+    {
+        sonidoSilenciado = silenciar;
+        PlayerPrefs.SetInt("SonidoSilenciado", silenciar ? 1 : 0);
+        PlayerPrefs.Save();
+
+        AudioListener.pause = silenciar;
+        AudioListener.volume = silenciar ? 0f : 1f;
+
+        if (musicaSource != null)
+        {
+            musicaSource.mute = silenciar;
+            if (!silenciar && !musicaSource.isPlaying && musicaFondoNivel2 != null)
+            {
+                musicaSource.Play();
+            }
+        }
+
+        if (sfxSource != null)
+        {
+            sfxSource.mute = silenciar;
+        }
+
+        Debug.Log($"[ControladorAudio] Sonido {(silenciar ? "SILENCIADO (Quitar Sonido)" : "ACTIVADO")}.");
     }
 
     private void ConfigurarFuentes()
@@ -74,6 +122,7 @@ public class ControladorAudio : MonoBehaviour
         musicaSource.playOnAwake = false;
         musicaSource.volume = volumenMusica;
         musicaSource.spatialBlend = 0f; // 2D Sound
+        musicaSource.mute = sonidoSilenciado;
 
         if (sfxSource == null)
         {
@@ -83,11 +132,17 @@ public class ControladorAudio : MonoBehaviour
         sfxSource.playOnAwake = false;
         sfxSource.volume = volumenSFX;
         sfxSource.spatialBlend = 0f; // 2D Sound
+        sfxSource.mute = sonidoSilenciado;
     }
 
     public void ReproducirMusicaFondo()
     {
         if (musicaSource == null) return;
+        if (sonidoSilenciado)
+        {
+            musicaSource.mute = true;
+            return;
+        }
 
         if (musicaFondoNivel2 != null && musicaSource.clip != musicaFondoNivel2)
         {
@@ -97,6 +152,7 @@ public class ControladorAudio : MonoBehaviour
         if (musicaSource.clip != null && !musicaSource.isPlaying)
         {
             musicaSource.volume = volumenMusica;
+            musicaSource.mute = false;
             musicaSource.Play();
         }
     }
@@ -111,6 +167,8 @@ public class ControladorAudio : MonoBehaviour
 
     public void ReanudarMusica()
     {
+        if (sonidoSilenciado) return;
+
         if (musicaSource != null && !musicaSource.isPlaying)
         {
             musicaSource.UnPause();
@@ -127,6 +185,8 @@ public class ControladorAudio : MonoBehaviour
 
     public void ReproducirSFX(AudioClip clip, float escalaVolumen = 1f)
     {
+        if (sonidoSilenciado) return;
+
         if (sfxSource != null && clip != null)
         {
             sfxSource.PlayOneShot(clip, volumenSFX * escalaVolumen);

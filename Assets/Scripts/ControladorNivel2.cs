@@ -76,6 +76,7 @@ public class ControladorNivel2 : MonoBehaviour
     private Texture2D texBarraVida;
     private Texture2D texBarraFondo;
     private Texture2D texPanel;
+    private Texture2D texOverlayOscuro;
 
     public static void AsegurarInstancia()
     {
@@ -140,7 +141,7 @@ public class ControladorNivel2 : MonoBehaviour
         var teclado = Keyboard.current;
         if (teclado != null)
         {
-            if (teclado.escapeKey.wasPressedThisFrame || teclado.pKey.wasPressedThisFrame)
+            if (teclado.escapeKey.wasPressedThisFrame || teclado.pKey.wasPressedThisFrame || teclado.mKey.wasPressedThisFrame)
             {
                 presionoPausa = true;
             }
@@ -150,7 +151,7 @@ public class ControladorNivel2 : MonoBehaviour
         {
             try
             {
-                if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
+                if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.M))
                 {
                     presionoPausa = true;
                 }
@@ -282,6 +283,7 @@ public class ControladorNivel2 : MonoBehaviour
         if (texBarraFondo == null) texBarraFondo = CrearTexturaColor(new Color(0.2f, 0.2f, 0.25f, 0.95f));
         if (texBarraVida == null) texBarraVida = CrearTexturaColor(new Color(0.25f, 0.85f, 0.35f, 1f));
         if (texPanel == null) texPanel = CrearTexturaColor(new Color(0.06f, 0.06f, 0.10f, 0.96f));
+        if (texOverlayOscuro == null) texOverlayOscuro = CrearTexturaColor(new Color(0.02f, 0.02f, 0.05f, 0.78f));
     }
 
     private Texture2D CrearTexturaColor(Color color)
@@ -370,17 +372,38 @@ public class ControladorNivel2 : MonoBehaviour
 
         GUI.Label(new Rect(xCentral + 15, 38, anchoCentral - 30, 48), $"{titulo}: {pista}", estiloAcertijo);
 
-        // PANEL 3: Superior Derecho (Tiempo y Pausa)
-        float xDer = Screen.width - 180;
-        GUI.DrawTexture(new Rect(xDer, 15, 165, 72), texFondoHUD);
+        // PANEL 3: Superior Derecho (Tiempo, Botón Quitar Sonido y Botón Menú)
+        float anchoDer = 230f;
+        float xDer = Screen.width - anchoDer - 15f;
+        GUI.DrawTexture(new Rect(xDer, 15, anchoDer, 75), texFondoHUD);
         int minutos = Mathf.FloorToInt(tiempoTranscurrido / 60F);
         int segundos = Mathf.FloorToInt(tiempoTranscurrido % 60F);
-        GUI.Label(new Rect(xDer + 15, 20, 140, 20), $"⏱️ Tiempo: {minutos:00}:{segundos:00}", estiloTexto);
+        GUI.Label(new Rect(xDer + 15, 18, anchoDer - 30, 20), $"⏱️ Tiempo: {minutos:00}:{segundos:00}", estiloTexto);
 
-        GUIStyle estiloMini = new GUIStyle(GUI.skin.label);
-        estiloMini.fontSize = 11;
-        estiloMini.normal.textColor = new Color(0.8f, 0.8f, 0.9f);
-        GUI.Label(new Rect(xDer + 15, 45, 140, 20), "Tecla [P] Pausar", estiloMini);
+        // Botón rápido de sonido (Quitar Sonido / Activar Sonido)
+        bool silenciadoHUD = ControladorAudio.Instancia != null && ControladorAudio.Instancia.sonidoSilenciado;
+        string textoBtnSonidoHUD = silenciadoHUD ? "🔇 Mudo" : "🔊 Audio";
+        Color colorAnt = GUI.backgroundColor;
+        GUI.backgroundColor = silenciadoHUD ? new Color(0.65f, 0.65f, 0.7f) : new Color(0.25f, 0.75f, 0.4f);
+        if (GUI.Button(new Rect(xDer + 12, 42, 90, 28), textoBtnSonidoHUD))
+        {
+            ControladorAudio.Instancia?.AlternarSonido();
+        }
+
+        // Botón para abrir el Menú de Opciones
+        GUI.backgroundColor = new Color(0.25f, 0.55f, 0.9f);
+        if (GUI.Button(new Rect(xDer + 108, 42, 110, 28), "⚙️ Menú (P)"))
+        {
+            if (estadoActual == EstadoJuego.Jugando)
+            {
+                PausarJuego();
+            }
+            else if (estadoActual == EstadoJuego.Pausado)
+            {
+                ReanudarJuego();
+            }
+        }
+        GUI.backgroundColor = colorAnt;
     }
 
     private void DibujarBannerPista()
@@ -404,44 +427,95 @@ public class ControladorNivel2 : MonoBehaviour
 
     private void DibujarMenuPausa()
     {
-        float ancho = 380f;
-        float alto = 320f;
+        // 1. Fondo oscurecido de pantalla completa
+        if (texOverlayOscuro == null) texOverlayOscuro = CrearTexturaColor(new Color(0.02f, 0.02f, 0.05f, 0.78f));
+        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), texOverlayOscuro);
+
+        // 2. Ventana del Menú
+        float ancho = 460f;
+        float alto = 415f;
         float x = (Screen.width - ancho) / 2f;
         float y = (Screen.height - alto) / 2f;
 
         GUI.DrawTexture(new Rect(x, y, ancho, alto), texPanel);
 
+        // Título del Menú
         GUIStyle estiloTitulo = new GUIStyle(GUI.skin.label);
-        estiloTitulo.fontSize = 24;
+        estiloTitulo.fontSize = 22;
         estiloTitulo.fontStyle = FontStyle.Bold;
         estiloTitulo.alignment = TextAnchor.MiddleCenter;
-        estiloTitulo.normal.textColor = Color.white;
-        GUI.Label(new Rect(x, y + 25, ancho, 40), "JUEGO PAUSADO", estiloTitulo);
+        estiloTitulo.normal.textColor = new Color(1f, 0.88f, 0.35f);
+        GUI.Label(new Rect(x, y + 18, ancho, 32), "⚙️ MENÚ DEL JUEGO", estiloTitulo);
+
+        // Subtítulo
+        GUIStyle estiloSub = new GUIStyle(GUI.skin.label);
+        estiloSub.fontSize = 12;
+        estiloSub.alignment = TextAnchor.MiddleCenter;
+        estiloSub.normal.textColor = new Color(0.8f, 0.85f, 0.95f);
+        GUI.Label(new Rect(x, y + 50, ancho, 20), "Nivel 2: Las Puertas Cerradas de la Burocracia", estiloSub);
+
+        // Estado del jugador
+        GUIStyle estiloInfo = new GUIStyle(GUI.skin.label);
+        estiloInfo.fontSize = 12;
+        estiloInfo.alignment = TextAnchor.MiddleCenter;
+        estiloInfo.normal.textColor = new Color(0.9f, 0.9f, 0.9f);
+        int minutos = Mathf.FloorToInt(tiempoTranscurrido / 60F);
+        int segundos = Mathf.FloorToInt(tiempoTranscurrido % 60F);
+        GUI.Label(new Rect(x, y + 74, ancho, 20), $"❤️ Ánimo: {Mathf.RoundToInt(saludActual)}%   |   📄 Expediente: {hojasRecolectadas}/{totalHojas}   |   ⏱️ {minutos:00}:{segundos:00}", estiloInfo);
 
         GUIStyle estiloBtn = new GUIStyle(GUI.skin.button);
-        estiloBtn.fontSize = 15;
+        estiloBtn.fontSize = 14;
         estiloBtn.fontStyle = FontStyle.Bold;
 
-        if (GUI.Button(new Rect(x + 50, y + 90, ancho - 100, 42), "Reanudar", estiloBtn))
+        Color colorAnt = GUI.backgroundColor;
+
+        // BOTÓN 1: REANUDAR JUEGO
+        GUI.backgroundColor = new Color(0.2f, 0.55f, 0.9f);
+        if (GUI.Button(new Rect(x + 45, y + 108, ancho - 90, 44), "▶️  Reanudar Juego", estiloBtn))
         {
             ReanudarJuego();
         }
 
-        if (GUI.Button(new Rect(x + 50, y + 145, ancho - 100, 42), "Reiniciar Nivel", estiloBtn))
+        // BOTÓN 2: REINICIAR (Petición directa del usuario: "reinicie")
+        GUI.backgroundColor = new Color(0.95f, 0.55f, 0.15f);
+        if (GUI.Button(new Rect(x + 45, y + 164, ancho - 90, 44), "🔄  Reiniciar Nivel", estiloBtn))
         {
             ReiniciarNivel();
         }
 
-        if (GUI.Button(new Rect(x + 50, y + 200, ancho - 100, 42), "Salir", estiloBtn))
+        // BOTÓN 3: QUITAR SONIDO / ACTIVAR SONIDO (Petición directa del usuario: "quitar sonido")
+        bool silenciado = ControladorAudio.Instancia != null && ControladorAudio.Instancia.sonidoSilenciado;
+        string textoBtnSonido = silenciado ? "🔇  Activar Sonido (Sonido Desactivado)" : "🔊  Quitar Sonido (Sonido Activado)";
+        GUI.backgroundColor = silenciado ? new Color(0.6f, 0.6f, 0.65f) : new Color(0.25f, 0.75f, 0.4f);
+        if (GUI.Button(new Rect(x + 45, y + 220, ancho - 90, 44), textoBtnSonido, estiloBtn))
+        {
+            ControladorAudio.Instancia?.AlternarSonido();
+        }
+
+        // BOTÓN 4: SALIR AL INICIO
+        GUI.backgroundColor = new Color(0.75f, 0.25f, 0.25f);
+        if (GUI.Button(new Rect(x + 45, y + 276, ancho - 90, 40), "🚪  Salir del Nivel", estiloBtn))
         {
             SalirAlMenu();
         }
+
+        GUI.backgroundColor = colorAnt;
+
+        // Atajos de teclado informativos
+        GUIStyle estiloAtajos = new GUIStyle(GUI.skin.label);
+        estiloAtajos.fontSize = 11;
+        estiloAtajos.alignment = TextAnchor.MiddleCenter;
+        estiloAtajos.normal.textColor = new Color(0.7f, 0.75f, 0.85f);
+        GUI.Label(new Rect(x, y + 338, ancho, 45), "Atajos de teclado:\n[Escape], [P] o [M] para Pausa / Menú\n[Espacio] o [V] para Saltar | [Flechas] o [A/D] Moverse", estiloAtajos);
     }
 
     private void DibujarPantallaVictoria()
     {
+        if (texOverlayOscuro == null) texOverlayOscuro = CrearTexturaColor(new Color(0.02f, 0.02f, 0.05f, 0.78f));
+        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), texOverlayOscuro);
+
         float ancho = 520f;
-        float alto = 390f;
+        float alto = 410f;
         float x = (Screen.width - ancho) / 2f;
         float y = (Screen.height - alto) / 2f;
 
@@ -452,7 +526,7 @@ public class ControladorNivel2 : MonoBehaviour
         estiloTitulo.fontStyle = FontStyle.Bold;
         estiloTitulo.alignment = TextAnchor.MiddleCenter;
         estiloTitulo.normal.textColor = new Color(0.4f, 1f, 0.5f);
-        GUI.Label(new Rect(x, y + 25, ancho, 35), "¡EXPEDIENTE REUNIDO AL 100%!", estiloTitulo);
+        GUI.Label(new Rect(x, y + 22, ancho, 35), "¡EXPEDIENTE REUNIDO AL 100%!", estiloTitulo);
 
         GUIStyle estiloTexto = new GUIStyle(GUI.skin.label);
         estiloTexto.fontSize = 13;
@@ -467,27 +541,47 @@ public class ControladorNivel2 : MonoBehaviour
                                $"Tiempo final: {minutos:00}:{segundos:00}\n" +
                                $"Ánimo restante: {Mathf.RoundToInt(saludActual)}%";
 
-        GUI.Label(new Rect(x + 25, y + 75, ancho - 50, 120), textoVictoria, estiloTexto);
+        GUI.Label(new Rect(x + 25, y + 68, ancho - 50, 115), textoVictoria, estiloTexto);
 
         GUIStyle estiloBtn = new GUIStyle(GUI.skin.button);
         estiloBtn.fontSize = 14;
         estiloBtn.fontStyle = FontStyle.Bold;
 
-        if (GUI.Button(new Rect(x + 80, y + 225, ancho - 160, 42), "Rejugar Nivel", estiloBtn))
+        Color colorAnt = GUI.backgroundColor;
+
+        // Reiniciar
+        GUI.backgroundColor = new Color(0.95f, 0.55f, 0.15f);
+        if (GUI.Button(new Rect(x + 60, y + 205, ancho - 120, 42), "🔄  Reiniciar Nivel", estiloBtn))
         {
             ReiniciarNivel();
         }
 
-        if (GUI.Button(new Rect(x + 80, y + 280, ancho - 160, 42), "Continuar al Nivel 3", estiloBtn))
+        // Quitar / Activar Sonido
+        bool silenciadoVic = ControladorAudio.Instancia != null && ControladorAudio.Instancia.sonidoSilenciado;
+        string textoSonidoVic = silenciadoVic ? "🔇  Activar Sonido" : "🔊  Quitar Sonido";
+        GUI.backgroundColor = silenciadoVic ? new Color(0.6f, 0.6f, 0.65f) : new Color(0.25f, 0.75f, 0.4f);
+        if (GUI.Button(new Rect(x + 60, y + 255, ancho - 120, 40), textoSonidoVic, estiloBtn))
         {
-            ReiniciarNivel();
+            ControladorAudio.Instancia?.AlternarSonido();
         }
+
+        // Salir
+        GUI.backgroundColor = new Color(0.75f, 0.25f, 0.25f);
+        if (GUI.Button(new Rect(x + 60, y + 303, ancho - 120, 38), "🚪  Salir", estiloBtn))
+        {
+            SalirAlMenu();
+        }
+
+        GUI.backgroundColor = colorAnt;
     }
 
     private void DibujarPantallaDerrota()
     {
-        float ancho = 440f;
-        float alto = 320f;
+        if (texOverlayOscuro == null) texOverlayOscuro = CrearTexturaColor(new Color(0.02f, 0.02f, 0.05f, 0.78f));
+        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), texOverlayOscuro);
+
+        float ancho = 460f;
+        float alto = 380f;
         float x = (Screen.width - ancho) / 2f;
         float y = (Screen.height - alto) / 2f;
 
@@ -498,7 +592,7 @@ public class ControladorNivel2 : MonoBehaviour
         estiloTitulo.fontStyle = FontStyle.Bold;
         estiloTitulo.alignment = TextAnchor.MiddleCenter;
         estiloTitulo.normal.textColor = new Color(1f, 0.35f, 0.35f);
-        GUI.Label(new Rect(x, y + 25, ancho, 35), "Ánimo Agotado", estiloTitulo);
+        GUI.Label(new Rect(x, y + 22, ancho, 35), "Ánimo Agotado", estiloTitulo);
 
         GUIStyle estiloTexto = new GUIStyle(GUI.skin.label);
         estiloTexto.fontSize = 13;
@@ -509,20 +603,37 @@ public class ControladorNivel2 : MonoBehaviour
         string textoDerrota = "Los obstáculos móviles y el desgaste burocrático detuvieron la búsqueda.\n" +
                               "Una madre nunca se rinde: recupera fuerzas y vuelve a intentarlo.";
 
-        GUI.Label(new Rect(x + 25, y + 75, ancho - 50, 80), textoDerrota, estiloTexto);
+        GUI.Label(new Rect(x + 25, y + 68, ancho - 50, 75), textoDerrota, estiloTexto);
 
         GUIStyle estiloBtn = new GUIStyle(GUI.skin.button);
-        estiloBtn.fontSize = 15;
+        estiloBtn.fontSize = 14;
         estiloBtn.fontStyle = FontStyle.Bold;
 
-        if (GUI.Button(new Rect(x + 60, y + 175, ancho - 120, 45), "Reintentar", estiloBtn))
+        Color colorAnt = GUI.backgroundColor;
+
+        // Reiniciar
+        GUI.backgroundColor = new Color(0.95f, 0.55f, 0.15f);
+        if (GUI.Button(new Rect(x + 50, y + 160, ancho - 100, 44), "🔄  Reiniciar Nivel", estiloBtn))
         {
             ReiniciarNivel();
         }
 
-        if (GUI.Button(new Rect(x + 60, y + 235, ancho - 120, 42), "Salir", estiloBtn))
+        // Quitar / Activar Sonido
+        bool silenciadoDer = ControladorAudio.Instancia != null && ControladorAudio.Instancia.sonidoSilenciado;
+        string textoSonidoDer = silenciadoDer ? "🔇  Activar Sonido" : "🔊  Quitar Sonido";
+        GUI.backgroundColor = silenciadoDer ? new Color(0.6f, 0.6f, 0.65f) : new Color(0.25f, 0.75f, 0.4f);
+        if (GUI.Button(new Rect(x + 50, y + 214, ancho - 100, 42), textoSonidoDer, estiloBtn))
+        {
+            ControladorAudio.Instancia?.AlternarSonido();
+        }
+
+        // Salir
+        GUI.backgroundColor = new Color(0.75f, 0.25f, 0.25f);
+        if (GUI.Button(new Rect(x + 50, y + 266, ancho - 100, 38), "🚪  Salir", estiloBtn))
         {
             SalirAlMenu();
         }
+
+        GUI.backgroundColor = colorAnt;
     }
 }
