@@ -58,37 +58,29 @@ public static class ConfigurarNivel2Automatico
         var escenaActiva = EditorSceneManager.GetActiveScene();
         if (!escenaActiva.IsValid() || !escenaActiva.isLoaded) return;
 
-        bool faltaCamara = (Camera.main == null && GameObject.Find("Main Camera") == null);
-        bool faltaMadre = (GameObject.Find("MadreBuscadora") == null);
         bool faltaScene = (GameObject.Find("SCENE") == null && GameObject.Find("Tilemap") == null);
-        bool faltaLuz = (GameObject.Find("Global Light 2D") == null);
-
-        if (faltaCamara || faltaMadre || faltaScene || faltaLuz)
+        if (faltaScene)
         {
-            Debug.LogWarning("[Nivel 2] Faltan elementos esenciales en la escena activa (" +
-                             (faltaCamara ? "Cámara " : "") +
-                             (faltaMadre ? "MadreBuscadora " : "") +
-                             (faltaScene ? "Tilemap/SCENE " : "") +
-                             (faltaLuz ? "Luz " : "") +
-                             "). Importando desde SampleScene.unity...");
-
-            if (escenaActiva.path != "Assets/Scenes/SampleScene.unity")
+            Debug.LogWarning("[Nivel 2] Faltan SCENE/Tilemap en la escena activa. Clonando de forma segura desde la plantilla...");
+            string pathDemo = "Assets/Cainos/Pixel Art Platformer - Village Props/Scene/SC Demo Scene - Village Props.unity";
+            Scene demoScene = EditorSceneManager.OpenScene(pathDemo, OpenSceneMode.Additive);
+            if (demoScene.IsValid() && demoScene.isLoaded)
             {
-                Scene escenaFuente = EditorSceneManager.OpenScene("Assets/Scenes/SampleScene.unity", OpenSceneMode.Additive);
-                if (escenaFuente.IsValid() && escenaFuente.isLoaded)
+                foreach (GameObject rootObj in demoScene.GetRootGameObjects())
                 {
-                    GameObject[] raicesFuente = escenaFuente.GetRootGameObjects();
-                    foreach (GameObject obj in raicesFuente)
+                    if (rootObj.name == "SCENE" || rootObj.name == "Tilemap" || rootObj.name == "Ground")
                     {
-                        if (GameObject.Find(obj.name) == null)
+                        if (GameObject.Find(rootObj.name) == null)
                         {
-                            SceneManager.MoveGameObjectToScene(obj, escenaActiva);
-                            Debug.Log("[Nivel 2] Objeto restaurado en la escena: " + obj.name);
+                            GameObject clon = Object.Instantiate(rootObj);
+                            clon.name = rootObj.name;
+                            SceneManager.MoveGameObjectToScene(clon, escenaActiva);
+                            Debug.Log("[Nivel 2] Escenario clonado e importado con éxito: " + clon.name);
                         }
                     }
-                    EditorSceneManager.CloseScene(escenaFuente, true);
-                    EditorSceneManager.MarkSceneDirty(escenaActiva);
                 }
+                EditorSceneManager.CloseScene(demoScene, true);
+                EditorSceneManager.MarkSceneDirty(escenaActiva);
             }
         }
     }
@@ -298,8 +290,10 @@ public static class ConfigurarNivel2Automatico
         {
             GameObject goFondo = GameObject.Find("Fondo_Tematico_SanLuis");
             if (goFondo == null) goFondo = new GameObject("Fondo_Tematico_SanLuis");
-            goFondo.transform.position = new Vector3(-48f, -2.0f, 25f);
-            goFondo.transform.localScale = new Vector3(44f, 26f, 1f);
+            // Posicionamiento calculado para que los edificios coloniales, la iglesia y los carteles de búsqueda
+            // queden exactamente a la altura de la calle y de los ojos del jugador (Y = 6 a 12), con montañas de fondo
+            goFondo.transform.position = new Vector3(-47.5f, 14.0f, 25f);
+            goFondo.transform.localScale = new Vector3(68f, 38f, 1f);
 
             var srFondo = goFondo.GetComponent<SpriteRenderer>();
             if (srFondo == null) srFondo = goFondo.AddComponent<SpriteRenderer>();
@@ -310,8 +304,8 @@ public static class ConfigurarNivel2Automatico
 
             var parFondo = goFondo.GetComponent<FondoParallax>();
             if (parFondo == null) parFondo = goFondo.AddComponent<FondoParallax>();
-            parFondo.factorX = 0.72f;
-            parFondo.factorY = 0.52f;
+            parFondo.factorX = 0.20f;
+            parFondo.factorY = 0.03f;
             parFondo.ordenRenderizado = -90;
         }
 
