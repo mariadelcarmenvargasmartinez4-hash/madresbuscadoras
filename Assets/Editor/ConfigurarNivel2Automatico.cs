@@ -112,25 +112,52 @@ public static class ConfigurarNivel2Automatico
         }
 
         // 0.1 ABRIR LA ENTRADA SUBTERRÁNEA Y EL PASO DE LA CUEVA EN EL TILEMAP (Elimina techos y salientes sólidos en rojo)
-        GameObject goTilemap = GameObject.Find("Tilemap");
-        if (goTilemap != null)
+        Tilemap tm = Object.FindFirstObjectByType<Tilemap>();
+        if (tm == null)
         {
-            Tilemap tm = goTilemap.GetComponent<Tilemap>();
-            if (tm != null)
+            GameObject goGround = GameObject.Find("Ground");
+            if (goGround != null) tm = goGround.GetComponent<Tilemap>();
+        }
+        if (tm == null)
+        {
+            GameObject goTilemap = GameObject.Find("Tilemap");
+            if (goTilemap != null) tm = goTilemap.GetComponentInChildren<Tilemap>();
+        }
+
+        if (tm != null)
+        {
+            // Caja 1 (Suelo superior del foso en Y = -5 y Y = -4 desde X = -75 hasta -63):
+            for (int x = -75; x <= -63; x++)
             {
-                // Caja 1 (Suelo superior del foso en Y = -5):
-                for (int x = -74; x <= -64; x++)
+                tm.SetTile(new Vector3Int(x, -5, 0), null);
+                tm.SetTile(new Vector3Int(x, -4, 0), null);
+            }
+            // Caja 2 (Saliente y bloque colgante en la cueva desde X = -69 hasta -57, Y entre -15 y -9):
+            for (int x = -69; x <= -57; x++)
+            {
+                for (int y = -15; y <= -9; y++)
                 {
-                    tm.SetTile(new Vector3Int(x, -5, 0), null);
+                    tm.SetTile(new Vector3Int(x, y, 0), null);
                 }
-                // Caja 2 (Saliente/techo colgante en la cueva):
-                for (int x = -69; x <= -63; x++)
-                {
-                    for (int y = -14; y <= -10; y++)
-                    {
-                        tm.SetTile(new Vector3Int(x, y, 0), null);
-                    }
-                }
+            }
+            tm.CompressBounds();
+            tm.RefreshAllTiles();
+        }
+
+        // 0.2 Eliminar accesorios flotantes en el hueco de entrada a la cueva (Trigos y calabazas de adorno)
+        string[] propsFlotantes = new string[]
+        {
+            "PF Village Props - Wheat 01", "PF Village Props - Wheat 02",
+            "PF Village Props - Wheat 03", "PF Village Props - Wheat 04",
+            "PF Village Props - Wheat 05", "PF Village Props - Pumpkin B",
+            "PF Village Props - Anvil 01"
+        };
+        foreach (string nomProp in propsFlotantes)
+        {
+            GameObject pObj = GameObject.Find(nomProp);
+            if (pObj != null && pObj.transform.position.x < -62f && pObj.transform.position.x > -76f && pObj.transform.position.y > -6f)
+            {
+                Object.DestroyImmediate(pObj);
             }
         }
 
@@ -333,12 +360,13 @@ public static class ConfigurarNivel2Automatico
             }
         }
 
-        // 5. CARGAR SPRITES DE LAS HOJAS, PICOS, PLATAFORMAS Y ANTORCHAS
+        // 5. CARGAR SPRITES DE LAS HOJAS, PICOS, PLATAFORMAS, ANTORCHAS Y ESCALERAS
         Sprite[] spritesNoti = new Sprite[4];
         Sprite spritePua = null;
         Sprite spriteSpikeBall = null;
         Sprite spritePlataformaMadera = null;
         Sprite spriteAntorcha = null;
+        Sprite spriteEscalera = null;
 
         Object[] propsAssets = AssetDatabase.LoadAllAssetsAtPath("Assets/Cainos/Pixel Art Platformer - Village Props/Texture/TX Village Props.png");
         foreach (var a in propsAssets)
@@ -353,6 +381,7 @@ public static class ConfigurarNivel2Automatico
                 else if (sp.name.Contains("Spike") && !sp.name.Contains("Ball")) spritePua = sp;
                 else if (sp.name.Contains("Platform M") || sp.name.Contains("Platform S")) spritePlataformaMadera = sp;
                 else if (sp.name.Contains("Torch") || sp.name.Contains("Road Sign")) spriteAntorcha = sp;
+                else if (sp.name.Contains("Ladder 01 M") || sp.name.Contains("Ladder M")) spriteEscalera = sp;
             }
         }
 
@@ -366,9 +395,9 @@ public static class ConfigurarNivel2Automatico
             new { Nombre = "Pista_Hoja_5_Puente", Pos = new Vector3(-33.0f, -5.2f, 0f), Num = 5, Titulo = "Bitácora de la Ruta Norte", Detalle = "Desviación no autorizada del autobús detectada." },
             new { Nombre = "Pista_Hoja_6_Estatua", Pos = new Vector3(-44.5f, -3.8f, 0f), Num = 6, Titulo = "Oficio Confidencial No. 22", Detalle = "Primeros indicios forenses vinculados a fosas del norte." },
             new { Nombre = "Pista_Hoja_7_Archivero", Pos = new Vector3(-62.0f, -4.8f, 0f), Num = 7, Titulo = "Carpeta de Denuncia Rechazada", Detalle = "Documentos institucionales que fueron archivados sin investigar." },
-            new { Nombre = "Pista_Hoja_8_Andamio", Pos = new Vector3(-64.5f, -7.2f, 0f), Num = 8, Titulo = "Informe Preliminar de San Fernando", Detalle = "Reportes que confirman hallazgos en San Fernando, Tamaulipas." },
-            new { Nombre = "Pista_Hoja_9_Cadenas", Pos = new Vector3(-54.0f, -15.0f, 0f), Num = 9, Titulo = "Ficha de Cotejo Forense del EAAF", Detalle = "Peritaje independiente de antropología forense." },
-            new { Nombre = "Pista_Hoja_10_Boveda_Final", Pos = new Vector3(-73.8f, -18.4f, 0f), Num = 10, Titulo = "Expediente Completo con Sello Oficial", Detalle = "¡Expediente reunido al 100%! Datos listos para la búsqueda en campo (Nivel 3)." }
+            new { Nombre = "Pista_Hoja_8_Andamio", Pos = new Vector3(-63.5f, -7.0f, 0f), Num = 8, Titulo = "Informe Preliminar de San Fernando", Detalle = "Reportes que confirman hallazgos en San Fernando, Tamaulipas." },
+            new { Nombre = "Pista_Hoja_9_Cadenas", Pos = new Vector3(-53.5f, -14.6f, 0f), Num = 9, Titulo = "Ficha de Cotejo Forense del EAAF", Detalle = "Peritaje independiente de antropología forense." },
+            new { Nombre = "Pista_Hoja_10_Boveda_Final", Pos = new Vector3(-73.8f, -17.9f, 0f), Num = 10, Titulo = "Expediente Completo con Sello Oficial", Detalle = "¡Expediente reunido al 100%! Datos listos para la búsqueda en campo (Nivel 3)." }
         };
 
         for (int i = 0; i < hojasInfo.Length; i++)
@@ -418,22 +447,22 @@ public static class ConfigurarNivel2Automatico
             new { Nombre = "Plataforma_Escalon_Puente", Pos = new Vector3(-30.5f, -2.2f, 0f), Escala = new Vector2(3.0f, 0.35f) },
 
             // 7.3 ENTRADA SUBTERRÁNEA: Descenso desde el piso de Archivos (Y = -5) hacia la Cueva (Hoja 8)
-            new { Nombre = "Plataforma_Entrada_Cueva_1", Pos = new Vector3(-66.5f, -6.2f, 0f), Escala = new Vector2(3.2f, 0.35f) },
-            new { Nombre = "Plataforma_Entrada_Cueva_2", Pos = new Vector3(-64.5f, -7.8f, 0f), Escala = new Vector2(3.5f, 0.35f) }, // Sostiene Hoja 8 en (-64.5, -7.2)
+            new { Nombre = "Plataforma_Entrada_Cueva_1", Pos = new Vector3(-65.5f, -6.5f, 0f), Escala = new Vector2(4.0f, 0.40f) },
+            new { Nombre = "Plataforma_Entrada_Cueva_2", Pos = new Vector3(-63.5f, -7.8f, 0f), Escala = new Vector2(4.0f, 0.40f) }, // Sostiene Hoja 8 en (-63.5, -7.0)
 
-            // 7.4 CAMINO ESCALONADO HACIA HOJA 9 (Descenso fluido y seguro)
-            new { Nombre = "Plataforma_Cueva_Bajada_1", Pos = new Vector3(-61.5f, -9.8f, 0f), Escala = new Vector2(3.4f, 0.35f) },
-            new { Nombre = "Plataforma_Cueva_Bajada_2", Pos = new Vector3(-58.0f, -11.8f, 0f), Escala = new Vector2(3.4f, 0.35f) }, // Sostiene Botella 3
-            new { Nombre = "Plataforma_Cueva_Bajada_3", Pos = new Vector3(-55.5f, -13.8f, 0f), Escala = new Vector2(3.4f, 0.35f) },
-            new { Nombre = "Plataforma_Hoja_9_Base", Pos = new Vector3(-54.0f, -15.8f, 0f), Escala = new Vector2(4.2f, 0.40f) }, // Sostiene Hoja 9 en (-54.0, -15.0)
+            // 7.4 CAMINO ESCALONADO HACIA HOJA 9 (Descenso fluido, amplio y 100% seguro)
+            new { Nombre = "Plataforma_Cueva_Bajada_1", Pos = new Vector3(-60.5f, -9.5f, 0f), Escala = new Vector2(4.5f, 0.40f) },
+            new { Nombre = "Plataforma_Cueva_Bajada_2", Pos = new Vector3(-57.0f, -11.5f, 0f), Escala = new Vector2(4.5f, 0.40f) }, // Sostiene Botella 3 en (-57.0, -10.8)
+            new { Nombre = "Plataforma_Cueva_Bajada_3", Pos = new Vector3(-54.5f, -13.5f, 0f), Escala = new Vector2(4.5f, 0.40f) },
+            new { Nombre = "Plataforma_Hoja_9_Base", Pos = new Vector3(-53.5f, -15.5f, 0f), Escala = new Vector2(5.0f, 0.45f) }, // Sostiene Hoja 9 en (-53.5, -14.6)
 
-            // 7.5 CAMINO INFERIOR CONTINUO: PASARELA Y PUENTES CONECTANDO HOJA 9 CON HOJA 10
-            new { Nombre = "Plataforma_Camino_Inferior_1", Pos = new Vector3(-57.5f, -15.8f, 0f), Escala = new Vector2(3.8f, 0.35f) },
-            new { Nombre = "Plataforma_Camino_Inferior_2", Pos = new Vector3(-61.0f, -16.0f, 0f), Escala = new Vector2(3.8f, 0.35f) },
-            new { Nombre = "Plataforma_Camino_Inferior_3", Pos = new Vector3(-64.5f, -16.2f, 0f), Escala = new Vector2(3.8f, 0.35f) },
-            new { Nombre = "Plataforma_Camino_Inferior_4", Pos = new Vector3(-68.0f, -16.8f, 0f), Escala = new Vector2(3.8f, 0.35f) },
-            new { Nombre = "Plataforma_Camino_Inferior_5", Pos = new Vector3(-71.0f, -17.8f, 0f), Escala = new Vector2(3.8f, 0.35f) },
-            new { Nombre = "Plataforma_Boveda_Final_Base", Pos = new Vector3(-73.8f, -19.2f, 0f), Escala = new Vector2(4.5f, 0.45f) }, // Sostiene Hoja 10 en (-73.8, -18.4)
+            // 7.5 CAMINO INFERIOR CONTINUO: PASARELA Y PUENTES CONECTANDO HOJA 9 CON HOJA 10 (Sin abismos)
+            new { Nombre = "Plataforma_Camino_Inferior_1", Pos = new Vector3(-57.0f, -15.8f, 0f), Escala = new Vector2(4.5f, 0.40f) },
+            new { Nombre = "Plataforma_Camino_Inferior_2", Pos = new Vector3(-60.5f, -16.2f, 0f), Escala = new Vector2(4.5f, 0.40f) },
+            new { Nombre = "Plataforma_Camino_Inferior_3", Pos = new Vector3(-64.0f, -16.6f, 0f), Escala = new Vector2(4.5f, 0.40f) },
+            new { Nombre = "Plataforma_Camino_Inferior_4", Pos = new Vector3(-67.5f, -17.2f, 0f), Escala = new Vector2(4.5f, 0.40f) },
+            new { Nombre = "Plataforma_Camino_Inferior_5", Pos = new Vector3(-70.8f, -18.0f, 0f), Escala = new Vector2(4.5f, 0.40f) },
+            new { Nombre = "Plataforma_Boveda_Final_Base", Pos = new Vector3(-73.8f, -18.8f, 0f), Escala = new Vector2(5.5f, 0.50f) }, // Sostiene Hoja 10 en (-73.8, -17.9)
 
             // 7.6 CONEXIÓN DE EXPLORACIÓN Y RETORNO (Nivel medio de la cueva)
             new { Nombre = "Plataforma_Cueva_Puente_Centro", Pos = new Vector3(-62.5f, -13.5f, 0f), Escala = new Vector2(4.0f, 0.35f) },
@@ -470,13 +499,27 @@ public static class ConfigurarNivel2Automatico
             effector.surfaceArc = 170f;
         }
 
+        // Escalera visual conectando Piso 3 con la Entrada a la Cueva
+        GameObject goEscalera = GameObject.Find("Escalera_Entrada_Cueva");
+        if (goEscalera == null)
+        {
+            goEscalera = new GameObject("Escalera_Entrada_Cueva");
+        }
+        goEscalera.transform.position = new Vector3(-65.5f, -5.8f, 0f);
+        goEscalera.transform.localScale = new Vector3(1.6f, 2.4f, 1f);
+        var srEscalera = goEscalera.GetComponent<SpriteRenderer>();
+        if (srEscalera == null) srEscalera = goEscalera.AddComponent<SpriteRenderer>();
+        if (spriteEscalera != null) srEscalera.sprite = spriteEscalera;
+        if (matDefault != null) srEscalera.sharedMaterial = matDefault;
+        srEscalera.sortingOrder = 12;
+
         // Señal visual de la Entrada a la Cueva
         GameObject goSenal = GameObject.Find("Senal_Entrada_Subterraneo");
         if (goSenal == null)
         {
             goSenal = new GameObject("Senal_Entrada_Subterraneo");
         }
-        goSenal.transform.position = new Vector3(-63.5f, -4.3f, 0f);
+        goSenal.transform.position = new Vector3(-63.0f, -4.0f, 0f);
         goSenal.transform.localScale = new Vector3(1.5f, 1.5f, 1f);
         var srSenal = goSenal.GetComponent<SpriteRenderer>();
         if (srSenal == null) srSenal = goSenal.AddComponent<SpriteRenderer>();
@@ -503,7 +546,7 @@ public static class ConfigurarNivel2Automatico
         srPuente.color = new Color(0.4f, 0.3f, 0.2f, 0.8f);
         srPuente.sortingOrder = 2;
 
-        // 8. OBSTÁCULOS MÓVILES (PATRULLAS QUE AMENAZAN LAS RUTAS)
+        // 8. OBSTÁCULOS MÓVILES (PATRULLAS QUE AMENAZAN LAS RUTAS SIN BLOQUEAR PASARELAS)
         var movilesInfo = new[]
         {
             new { Nombre = "Obstaculo_Movil_1_Mercado", Pos = new Vector3(-55.0f, 6.8f, 0f), Tipo = ObstaculoMovil.TipoPatrulla.Horizontal, Dist = 3.5f, Vel = 2.2f },
@@ -511,7 +554,7 @@ public static class ConfigurarNivel2Automatico
             new { Nombre = "Obstaculo_Movil_3_Plaza", Pos = new Vector3(-32.0f, 1.5f, 0f), Tipo = ObstaculoMovil.TipoPatrulla.Horizontal, Dist = 3.5f, Vel = 2.4f },
             new { Nombre = "Obstaculo_Movil_4_Andamio", Pos = new Vector3(-36.0f, -3.5f, 0f), Tipo = ObstaculoMovil.TipoPatrulla.Vertical, Dist = 2.0f, Vel = 2.0f },
             new { Nombre = "Obstaculo_Movil_5_Estatua", Pos = new Vector3(-50.0f, -4.5f, 0f), Tipo = ObstaculoMovil.TipoPatrulla.Horizontal, Dist = 3.0f, Vel = 2.6f },
-            new { Nombre = "Obstaculo_Movil_6_Boveda", Pos = new Vector3(-68.0f, -14.5f, 0f), Tipo = ObstaculoMovil.TipoPatrulla.Horizontal, Dist = 2.2f, Vel = 2.0f }
+            new { Nombre = "Obstaculo_Movil_6_Boveda", Pos = new Vector3(-67.5f, -13.5f, 0f), Tipo = ObstaculoMovil.TipoPatrulla.Horizontal, Dist = 2.2f, Vel = 2.0f }
         };
 
         for (int m = 0; m < movilesInfo.Length; m++)
@@ -546,7 +589,7 @@ public static class ConfigurarNivel2Automatico
             scriptMov.fuerzaRebote = 5f;
         }
 
-        // 9. OBSTÁCULOS ESTÁTICOS (12 TRAMPAS DE PÚAS SEPARADAS DE LAS HOJAS)
+        // 9. OBSTÁCULOS ESTÁTICOS (12 TRAMPAS DE PÚAS SEPARADAS DE LAS ESCALERAS Y PASARELAS)
         Vector3[] posicionesPeligro = new Vector3[]
         {
             new Vector3(-65.0f, 6.0f, 0f),   // Puas 1: Camino superior inicial
@@ -557,10 +600,10 @@ public static class ConfigurarNivel2Automatico
             new Vector3(-48.5f, 1.0f, 0f),   // Puas 6: Al oeste del pozo
             new Vector3(-39.0f, -5.0f, 0f),  // Puas 7: Paso al puente
             new Vector3(-54.0f, -5.0f, 0f),  // Puas 8: Camino a archivos
-            new Vector3(-58.5f, -10.0f, 0f), // Puas 9: Descenso de andamios (lejos de Hoja 8)
-            new Vector3(-70.0f, -14.0f, 0f), // Puas 10: Cornisa inferior
-            new Vector3(-61.0f, -20.5f, 0f), // Puas 11: Fondo del foso inferior (bajo la pasarela)
-            new Vector3(-70.5f, -20.0f, 0f)  // Puas 12: Fondo del foso de la bóveda final
+            new Vector3(-48.0f, -9.0f, 0f),  // Puas 9: Cornisa lateral despejada (no obstruye escalones)
+            new Vector3(-70.0f, -13.0f, 0f), // Puas 10: Cornisa superior de cueva
+            new Vector3(-61.0f, -21.0f, 0f), // Puas 11: Fondo del foso inferior (bajo la pasarela)
+            new Vector3(-72.0f, -21.0f, 0f)  // Puas 12: Fondo del foso de la bóveda final
         };
 
         for (int p = 0; p < posicionesPeligro.Length; p++)
@@ -604,7 +647,7 @@ public static class ConfigurarNivel2Automatico
         {
             new { Nombre = "Botella_Agua_1_Superficie", Pos = new Vector3(-40.0f, 6.6f, 0f) },
             new { Nombre = "Botella_Agua_2_Registro", Pos = new Vector3(-28.0f, 1.8f, 0f) },
-            new { Nombre = "Botella_Agua_3_Cueva", Pos = new Vector3(-58.0f, -11.2f, 0f) }
+            new { Nombre = "Botella_Agua_3_Cueva", Pos = new Vector3(-57.0f, -10.8f, 0f) }
         };
 
         foreach (var b in botellasInfo)
