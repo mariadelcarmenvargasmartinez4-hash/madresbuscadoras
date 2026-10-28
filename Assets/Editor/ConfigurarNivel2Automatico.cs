@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Script de Editor para Unity que configura automáticamente el Nivel 2.
@@ -9,6 +10,7 @@ using UnityEngine.Tilemaps;
 /// - Coloca puentes y plataformas escalonadas (one-way) conectando todas las hojas (1 a 10).
 /// - 10 Hojas de expediente 100% accesibles y libres de atascos.
 /// - Obstáculos equilibrados y retorno a la 1ª plataforma al caer al vacío.
+/// - Recuperación automática de Cámara, Jugador y Escenario (Tilemap) desde SampleScene.
 /// </summary>
 [InitializeOnLoad]
 public static class ConfigurarNivel2Automatico
@@ -24,10 +26,71 @@ public static class ConfigurarNivel2Automatico
         };
     }
 
-    [MenuItem("Juego/Configurar Nivel 2 Completo")]
+    [MenuItem("Juego/1. Cargar y Jugar Nivel 2 (SampleScene)", false, 1)]
+    public static void MenuCargarSampleScene()
+    {
+        if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+        {
+            EditorSceneManager.OpenScene("Assets/Scenes/SampleScene.unity", OpenSceneMode.Single);
+            ConfigurarTodoElNivel(true);
+        }
+    }
+
+    [MenuItem("Juego/2. Reparar y Configurar Escena Actual", false, 2)]
     public static void MenuConfigurar()
     {
         ConfigurarTodoElNivel(true);
+    }
+
+    [MenuItem("Juego/3. Sincronizar Nivel_2_Mundo con SampleScene", false, 3)]
+    public static void MenuSincronizarNivel2Mundo()
+    {
+        if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+        {
+            EditorSceneManager.OpenScene("Assets/Scenes/Nivel_2_Mundo.unity", OpenSceneMode.Single);
+            VerificarYRepararEscenaActiva();
+            ConfigurarTodoElNivel(true);
+        }
+    }
+
+    public static void VerificarYRepararEscenaActiva()
+    {
+        var escenaActiva = EditorSceneManager.GetActiveScene();
+        if (!escenaActiva.IsValid() || !escenaActiva.isLoaded) return;
+
+        bool faltaCamara = (Camera.main == null && GameObject.Find("Main Camera") == null);
+        bool faltaMadre = (GameObject.Find("MadreBuscadora") == null);
+        bool faltaScene = (GameObject.Find("SCENE") == null && GameObject.Find("Tilemap") == null);
+        bool faltaLuz = (GameObject.Find("Global Light 2D") == null);
+
+        if (faltaCamara || faltaMadre || faltaScene || faltaLuz)
+        {
+            Debug.LogWarning("[Nivel 2] Faltan elementos esenciales en la escena activa (" +
+                             (faltaCamara ? "Cámara " : "") +
+                             (faltaMadre ? "MadreBuscadora " : "") +
+                             (faltaScene ? "Tilemap/SCENE " : "") +
+                             (faltaLuz ? "Luz " : "") +
+                             "). Importando desde SampleScene.unity...");
+
+            if (escenaActiva.path != "Assets/Scenes/SampleScene.unity")
+            {
+                Scene escenaFuente = EditorSceneManager.OpenScene("Assets/Scenes/SampleScene.unity", OpenSceneMode.Additive);
+                if (escenaFuente.IsValid() && escenaFuente.isLoaded)
+                {
+                    GameObject[] raicesFuente = escenaFuente.GetRootGameObjects();
+                    foreach (GameObject obj in raicesFuente)
+                    {
+                        if (GameObject.Find(obj.name) == null)
+                        {
+                            SceneManager.MoveGameObjectToScene(obj, escenaActiva);
+                            Debug.Log("[Nivel 2] Objeto restaurado en la escena: " + obj.name);
+                        }
+                    }
+                    EditorSceneManager.CloseScene(escenaFuente, true);
+                    EditorSceneManager.MarkSceneDirty(escenaActiva);
+                }
+            }
+        }
     }
 
     public static void ConfigurarTodoElNivel(bool mostrarDialogo)
@@ -37,6 +100,9 @@ public static class ConfigurarNivel2Automatico
         {
             return;
         }
+
+        // Recuperación y sincronización de objetos estructurales si faltan
+        VerificarYRepararEscenaActiva();
 
         // 0. LIMPIEZA DE OBJETOS ANTIGUOS Y DUPLICADOS
         string[] objetosAntiguos = new string[]
@@ -112,10 +178,36 @@ public static class ConfigurarNivel2Automatico
 
         // 2. CÁMARA (SEGUIMIENTO SUAVE CENTRADO)
         Camera cam = Camera.main;
+        if (cam == null)
+        {
+            GameObject goCam = GameObject.Find("Main Camera");
+            if (goCam != null)
+            {
+                cam = goCam.GetComponent<Camera>();
+                if (cam == null) cam = goCam.AddComponent<Camera>();
+                goCam.tag = "MainCamera";
+            }
+            else
+            {
+                goCam = new GameObject("Main Camera");
+                goCam.tag = "MainCamera";
+                cam = goCam.AddComponent<Camera>();
+                goCam.AddComponent<AudioListener>();
+            }
+        }
+
         if (cam != null)
         {
+            cam.gameObject.tag = "MainCamera";
             cam.orthographic = true;
             cam.orthographicSize = 5f;
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.14f, 0.10f, 0.18f, 1f);
+
+            if (cam.GetComponent<AudioListener>() == null)
+            {
+                cam.gameObject.AddComponent<AudioListener>();
+            }
 
             var camSigue = cam.GetComponent<CamaraSigue>();
             if (camSigue == null)
@@ -136,6 +228,30 @@ public static class ConfigurarNivel2Automatico
         // 3. PROTAGONISTA (MADRE BUSCADORA) - Configuración y Reaparición en 1ª Plataforma
         GameObject goMadre = GameObject.Find("MadreBuscadora");
         Vector3 posPrimeraPlataforma = new Vector3(-74f, 6.2f, 0f);
+        if (goMadre == null)
+        {
+            var movExistente = Object.FindAnyObjectByType<MovimientoMadre>();
+            if (movExistente != null)
+            {
+                goMadre = movExistente.gameObject;
+                goMadre.name = "MadreBuscadora";
+            }
+        }
+        if (goMadre == null)
+        {
+            goMadre = new GameObject("MadreBuscadora");
+            goMadre.transform.position = posPrimeraPlataforma;
+            var rb = goMadre.AddComponent<Rigidbody2D>();
+            rb.freezeRotation = true;
+            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            var col = goMadre.AddComponent<CapsuleCollider2D>();
+            col.size = new Vector2(0.8f, 1.6f);
+            goMadre.AddComponent<MovimientoMadre>();
+            var sr = goMadre.AddComponent<SpriteRenderer>();
+            if (matDefault != null) sr.sharedMaterial = matDefault;
+            sr.sortingOrder = 15;
+        }
+
         if (goMadre != null)
         {
             var srMadre = goMadre.GetComponent<SpriteRenderer>();
@@ -150,6 +266,16 @@ public static class ConfigurarNivel2Automatico
             {
                 movMadre.posicionPrimeraPlataforma = posPrimeraPlataforma;
                 movMadre.fuerzaSalto = 11.8f;
+            }
+
+            // Actualizar objetivo de cámara
+            if (cam != null)
+            {
+                var camSigue = cam.GetComponent<CamaraSigue>();
+                if (camSigue != null)
+                {
+                    camSigue.objetivo = goMadre.transform;
+                }
             }
         }
 
@@ -491,13 +617,16 @@ public static class ConfigurarNivel2Automatico
 
         if (mostrarDialogo)
         {
-            EditorUtility.DisplayDialog("Nivel 2 - Entrada Abierta",
-                "¡Se habilitó el acceso completo a la zona subterránea!\n\n" +
-                "• Entrada abierta: Se retiró el techo bloqueado en el piso de archivos (Y = -5).\n" +
-                "• Red de puentes y plataformas: Se instalaron plataformas escalonadas (one-way) para descender hacia la Hoja 8, cruzar a la Hoja 9 y llegar a la Bóveda Final (Hoja 10).\n" +
-                "• Doble vía: Puedes subir y bajar libremente por toda la cueva sin quedar atrapado.\n" +
-                "• Señalización y acertijos actualizados.\n\n" +
-                "¡Presiona Play para explorar!", "Aceptar");
+            EditorUtility.DisplayDialog("Nivel 2 - Todo Listo para Jugar",
+                "¡El Nivel 2 ha sido reparado y configurado al 100%!\n\n" +
+                "• Escena activa: " + escenaActiva.name + "\n" +
+                "• Cámara Principal (Main Camera) activa y siguiendo a Esperanza.\n" +
+                "• Madre Buscadora (Esperanza) ubicada en la plataforma de inicio.\n" +
+                "• Escenario, calles, suelo y cuevas (Tilemap) restaurados.\n" +
+                "• Fondo temático panorámico de San Luis de la Paz al atardecer.\n" +
+                "• 3 Botellas de agua para recuperar salud (+25 c/u) sobre plataformas.\n" +
+                "• 10 Hojas de expediente accesibles y música ambiental conectada.\n\n" +
+                "¡Presiona el botón Play (▶️) para jugar!", "¡Aceptar!");
         }
     }
 }
