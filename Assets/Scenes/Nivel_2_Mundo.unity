@@ -18211,62 +18211,6 @@ MonoBehaviour:
   danio: 20
   fuerzaRebote: 4.5
   intervaloDanio: 1.2
---- !u!1 &960000150
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 960000151}
-  - component: {fileID: 960000152}
-  m_Layer: 0
-  m_Name: ControladorAudio
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &960000151
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 960000150}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &960000152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 960000150}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a8b9c0d1e2f3456789a0b1c2d3e4f50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  musicaSource: {fileID: 0}
-  sfxSource: {fileID: 0}
-  musicaFondoNivel2: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000010, type: 3}
-  volumenMusica: 0.45
-  sfxRecogerHoja: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000020, type: 3}
-  sfxDanio: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000021, type: 3}
-  sfxSalto: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000022, type: 3}
-  sfxCaidaVacio: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000023, type: 3}
-  sfxPaso: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000024, type: 3}
-  sfxVictoria: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000025, type: 3}
-  sfxBeberAgua: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000026, type: 3}
-  volumenSFX: 0.85
 --- !u!1001 &965424217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38950,6 +38894,62 @@ PrefabInstance:
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92a08448cd3527a4aaf11bc404e0f1a0, type: 3}
 --- !u!1660057539 &9223372036854775807
+--- !u!1 &960000150
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 960000151}
+  - component: {fileID: 960000152}
+  m_Layer: 0
+  m_Name: ControladorAudio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &960000151
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960000150}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &960000152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960000150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8b9c0d1e2f3456789a0b1c2d3e4f50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicaSource: {fileID: 0}
+  sfxSource: {fileID: 0}
+  musicaFondoNivel2: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000010, type: 3}
+  volumenMusica: 0.45
+  sfxRecogerHoja: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000020, type: 3}
+  sfxDanio: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000021, type: 3}
+  sfxSalto: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000022, type: 3}
+  sfxCaidaVacio: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000023, type: 3}
+  sfxPaso: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000024, type: 3}
+  sfxVictoria: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000025, type: 3}
+  sfxBeberAgua: {fileID: 8300000, guid: 60a1d41829e24683a48e8ff8b1000026, type: 3}
+  volumenSFX: 0.85
 --- !u!1 &960000230
 GameObject:
   m_ObjectHideFlags: 0
@@ -39499,27 +39499,10 @@ SceneRoots:
   - {fileID: 960000231}
   - {fileID: 960000241}
   - {fileID: 960000251}
-  - {fileID: 76771257}
-  - {fileID: 86532610}
-  - {fileID: 139594740}
-  - {fileID: 210513043}
-  - {fileID: 244586687}
-  - {fileID: 362767138}
-  - {fileID: 469242764}
-  - {fileID: 519420032}
-  - {fileID: 527945769}
-  - {fileID: 578094079}
-  - {fileID: 605485663}
-  - {fileID: 619394802}
+  - {fileID: 960000151}
   - {fileID: 711530802}
-  - {fileID: 718032455}
-  - {fileID: 776931397}
-  - {fileID: 792110849}
-  - {fileID: 866564202}
-  - {fileID: 877937020}
-  - {fileID: 892962878}
-  - {fileID: 912164373}
-  - {fileID: 924273676}
+  - {fileID: 519420032}
+  - {fileID: 619394802}
   - {fileID: 960000001}
   - {fileID: 960000053}
   - {fileID: 960000080}
@@ -39527,24 +39510,41 @@ SceneRoots:
   - {fileID: 960000090}
   - {fileID: 960000095}
   - {fileID: 960000100}
-  - {fileID: 960000151}
   - {fileID: 1000000002}
-  - {fileID: 1060794695}
-  - {fileID: 1311008418}
-  - {fileID: 1360558456}
-  - {fileID: 1382251930}
-  - {fileID: 1462960566}
-  - {fileID: 1539688482}
-  - {fileID: 1613489825}
+  - {fileID: 892962878}
   - {fileID: 1624306744}
-  - {fileID: 1704579629}
-  - {fileID: 1711126940}
-  - {fileID: 1898180172}
-  - {fileID: 1926352962}
-  - {fileID: 1927542040}
-  - {fileID: 1932818699}
-  - {fileID: 1953839616}
-  - {fileID: 1963898472}
+  - {fileID: 210513043}
+  - {fileID: 1462960566}
+  - {fileID: 362767138}
+  - {fileID: 1060794695}
+  - {fileID: 469242764}
+  - {fileID: 912164373}
+  - {fileID: 605485663}
+  - {fileID: 578094079}
+  - {fileID: 718032455}
   - {fileID: 2053176397}
+  - {fileID: 866564202}
+  - {fileID: 1711126940}
+  - {fileID: 1932818699}
+  - {fileID: 1382251930}
+  - {fileID: 776931397}
+  - {fileID: 877937020}
+  - {fileID: 527945769}
+  - {fileID: 1926352962}
+  - {fileID: 792110849}
+  - {fileID: 1704579629}
+  - {fileID: 1927542040}
+  - {fileID: 1953839616}
+  - {fileID: 86532610}
+  - {fileID: 139594740}
+  - {fileID: 1311008418}
+  - {fileID: 1539688482}
+  - {fileID: 924273676}
+  - {fileID: 1360558456}
   - {fileID: 2137516007}
   - {fileID: 2145043438}
+  - {fileID: 1613489825}
+  - {fileID: 244586687}
+  - {fileID: 1963898472}
+  - {fileID: 76771257}
+  - {fileID: 1898180172}
