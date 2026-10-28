@@ -28,6 +28,7 @@ public class ItemBotellaAgua : MonoBehaviour
 
     void Awake()
     {
+        transform.localScale = new Vector3(0.55f, 0.55f, 1f);
         sr = GetComponent<SpriteRenderer>();
         if (sr == null) sr = gameObject.AddComponent<SpriteRenderer>();
         col = GetComponent<Collider2D>();
@@ -137,11 +138,12 @@ public class ItemBotellaAgua : MonoBehaviour
         tex.SetPixel(10, 4, outline); tex.SetPixel(21, 4, outline);
 
         tex.Apply();
-        return Sprite.Create(tex, new Rect(0, 0, W, H), new Vector2(0.5f, 0.5f), 16f);
+        return Sprite.Create(tex, new Rect(0, 0, W, H), new Vector2(0.5f, 0.5f), 24f);
     }
 
     void Start()
     {
+        transform.localScale = new Vector3(0.55f, 0.55f, 1f);
         posicionInicial = transform.position;
         AsegurarVisuales();
 
