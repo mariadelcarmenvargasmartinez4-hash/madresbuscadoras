@@ -111,16 +111,25 @@ public static class ConfigurarNivel2Automatico
             }
         }
 
-        // 0.1 ABRIR LA ENTRADA SUBTERRÁNEA EN EL TILEMAP (Elimina el techo sólido en Y = -5)
+        // 0.1 ABRIR LA ENTRADA SUBTERRÁNEA Y EL PASO DE LA CUEVA EN EL TILEMAP (Elimina techos y salientes sólidos en rojo)
         GameObject goTilemap = GameObject.Find("Tilemap");
         if (goTilemap != null)
         {
             Tilemap tm = goTilemap.GetComponent<Tilemap>();
             if (tm != null)
             {
-                for (int x = -68; x <= -64; x++)
+                // Caja 1 (Suelo superior del foso en Y = -5):
+                for (int x = -74; x <= -64; x++)
                 {
                     tm.SetTile(new Vector3Int(x, -5, 0), null);
+                }
+                // Caja 2 (Saliente/techo colgante en la cueva):
+                for (int x = -69; x <= -63; x++)
+                {
+                    for (int y = -14; y <= -10; y++)
+                    {
+                        tm.SetTile(new Vector3Int(x, y, 0), null);
+                    }
                 }
             }
         }
