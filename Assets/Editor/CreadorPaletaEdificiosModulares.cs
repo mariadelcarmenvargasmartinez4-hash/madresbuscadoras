@@ -122,11 +122,7 @@ public static class CreadorPaletaEdificiosModulares
         Object.DestroyImmediate(goPaleta);
 
         // 5. Crear Prefabs individuales en Assets/Prefabs/EdificiosModulares/ para arrastrar directamente
-        Material matDefault = AssetDatabase.LoadAssetAtPath<Material>("Assets/Cainos/Pixel Art Platformer - Village Props/Material/MT Village Props - Default.mat");
-        if (matDefault == null)
-        {
-            matDefault = AssetDatabase.GetBuiltinExtraResource<Material>("Sprites-Default.mat");
-        }
+        Material matDefault = AssetDatabase.GetBuiltinExtraResource<Material>("Sprites-Default.mat");
 
         foreach (var sp in listaSprites)
         {
@@ -134,7 +130,7 @@ public static class CreadorPaletaEdificiosModulares
             GameObject goProp = new GameObject(sp.name);
             var sr = goProp.AddComponent<SpriteRenderer>();
             sr.sprite = sp;
-            sr.sortingOrder = -5;
+            sr.sortingOrder = 0;
             if (matDefault != null) sr.sharedMaterial = matDefault;
 
             PrefabUtility.SaveAsPrefabAsset(goProp, rutaPrefab);
@@ -186,11 +182,17 @@ public static class CreadorPaletaEdificiosModulares
             if (obj is Sprite sp) sprites[sp.name] = sp;
         }
 
-        Material matDefault = AssetDatabase.LoadAssetAtPath<Material>("Assets/Cainos/Pixel Art Platformer - Village Props/Material/MT Village Props - Default.mat");
-        if (matDefault == null) matDefault = AssetDatabase.GetBuiltinExtraResource<Material>("Sprites-Default.mat");
+        // Desactivar el fondo gris de prueba (Background / checkerboard de Cainos) si existe para que no tape las fachadas coloniales
+        GameObject goBackground = GameObject.Find("Background");
+        if (goBackground != null)
+        {
+            goBackground.SetActive(false);
+        }
+
+        Material matDefault = AssetDatabase.GetBuiltinExtraResource<Material>("Sprites-Default.mat");
 
         // Configuraciones de edificios y elementos arquitectónicos de fondo
-        // Z = 2.0 y sortingOrder = -5 para colocarse detrás del jugador y de las plataformas, pero delante del cielo/montañas
+        // Z = 2.0 y sortingOrder = 0 para colocarse visiblemente en el fondo detrás de personajes y plataformas
         var edificiosConfig = new[]
         {
             // =========================================================================
@@ -198,90 +200,90 @@ public static class CreadorPaletaEdificiosModulares
             // 10 Casas completas continuas de X = -83.0 a X = +3.25, base en Y = 6.0 (pasto)
             // =========================================================================
             // Casa 1: X in [-83.00, -74.50]
-            new { NombreGO = "Casa_01_Amarilla", SpriteNombre = "Fachada_Amarilla_Completa", Pos = new Vector3(-78.75f, 9.89f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Balcon_Casa_01", SpriteNombre = "Balcon_Cantera_Hierro", Pos = new Vector3(-78.75f, 12.20f, 1.8f), Escala = Vector3.one, Order = -4 },
+            new { NombreGO = "Casa_01_Amarilla", SpriteNombre = "Fachada_Amarilla_Completa", Pos = new Vector3(-78.75f, 9.89f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Balcon_Casa_01", SpriteNombre = "Balcon_Cantera_Hierro", Pos = new Vector3(-78.75f, 12.20f, 1.8f), Escala = Vector3.one, Order = 1 },
 
             // Casa 2: X in [-74.50, -65.75] (Punto de inicio de Esperanza en X = -74.0)
-            new { NombreGO = "Casa_02_Roja", SpriteNombre = "Fachada_Roja_Completa", Pos = new Vector3(-70.125f, 9.86f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Mirador_Casa_02", SpriteNombre = "Mirador_Balcon_Madera", Pos = new Vector3(-70.125f, 12.20f, 1.8f), Escala = Vector3.one, Order = -4 },
+            new { NombreGO = "Casa_02_Roja", SpriteNombre = "Fachada_Roja_Completa", Pos = new Vector3(-70.125f, 9.86f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Mirador_Casa_02", SpriteNombre = "Mirador_Balcon_Madera", Pos = new Vector3(-70.125f, 12.20f, 1.8f), Escala = Vector3.one, Order = 1 },
 
             // Casa 3: X in [-65.75, -57.25]
-            new { NombreGO = "Casa_03_Amarilla", SpriteNombre = "Fachada_Amarilla_Completa", Pos = new Vector3(-61.50f, 9.89f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Balcon_Casa_03", SpriteNombre = "Balcon_Cantera_Hierro", Pos = new Vector3(-61.50f, 12.20f, 1.8f), Escala = Vector3.one, Order = -4 },
-            new { NombreGO = "Talavera_Casa_03", SpriteNombre = "Azulejos_Talavera_Guanajuato", Pos = new Vector3(-61.50f, 10.50f, 1.8f), Escala = Vector3.one, Order = -4 },
+            new { NombreGO = "Casa_03_Amarilla", SpriteNombre = "Fachada_Amarilla_Completa", Pos = new Vector3(-61.50f, 9.89f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Balcon_Casa_03", SpriteNombre = "Balcon_Cantera_Hierro", Pos = new Vector3(-61.50f, 12.20f, 1.8f), Escala = Vector3.one, Order = 1 },
+            new { NombreGO = "Talavera_Casa_03", SpriteNombre = "Azulejos_Talavera_Guanajuato", Pos = new Vector3(-61.50f, 10.50f, 1.8f), Escala = Vector3.one, Order = 1 },
 
             // Casa 4: X in [-57.25, -48.50]
-            new { NombreGO = "Casa_04_Roja", SpriteNombre = "Fachada_Roja_Completa", Pos = new Vector3(-52.875f, 9.86f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Mirador_Casa_04", SpriteNombre = "Mirador_Balcon_Madera", Pos = new Vector3(-52.875f, 12.20f, 1.8f), Escala = Vector3.one, Order = -4 },
+            new { NombreGO = "Casa_04_Roja", SpriteNombre = "Fachada_Roja_Completa", Pos = new Vector3(-52.875f, 9.86f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Mirador_Casa_04", SpriteNombre = "Mirador_Balcon_Madera", Pos = new Vector3(-52.875f, 12.20f, 1.8f), Escala = Vector3.one, Order = 1 },
 
             // Casa 5: X in [-48.50, -40.00] (Zona del Mercado Tradicional)
-            new { NombreGO = "Casa_05_Amarilla", SpriteNombre = "Fachada_Amarilla_Completa", Pos = new Vector3(-44.25f, 9.89f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Balcon_Casa_05", SpriteNombre = "Balcon_Cantera_Hierro", Pos = new Vector3(-44.25f, 12.20f, 1.8f), Escala = Vector3.one, Order = -4 },
-            new { NombreGO = "Barandal_Casa_05", SpriteNombre = "Barandal_Hierro_Largo", Pos = new Vector3(-44.25f, 10.00f, 1.8f), Escala = Vector3.one, Order = -4 },
+            new { NombreGO = "Casa_05_Amarilla", SpriteNombre = "Fachada_Amarilla_Completa", Pos = new Vector3(-44.25f, 9.89f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Balcon_Casa_05", SpriteNombre = "Balcon_Cantera_Hierro", Pos = new Vector3(-44.25f, 12.20f, 1.8f), Escala = Vector3.one, Order = 1 },
+            new { NombreGO = "Barandal_Casa_05", SpriteNombre = "Barandal_Hierro_Largo", Pos = new Vector3(-44.25f, 10.00f, 1.8f), Escala = Vector3.one, Order = 1 },
 
             // Casa 6: X in [-40.00, -31.25]
-            new { NombreGO = "Casa_06_Roja", SpriteNombre = "Fachada_Roja_Completa", Pos = new Vector3(-35.625f, 9.86f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Mirador_Casa_06", SpriteNombre = "Mirador_Balcon_Madera", Pos = new Vector3(-35.625f, 12.20f, 1.8f), Escala = Vector3.one, Order = -4 },
+            new { NombreGO = "Casa_06_Roja", SpriteNombre = "Fachada_Roja_Completa", Pos = new Vector3(-35.625f, 9.86f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Mirador_Casa_06", SpriteNombre = "Mirador_Balcon_Madera", Pos = new Vector3(-35.625f, 12.20f, 1.8f), Escala = Vector3.one, Order = 1 },
 
             // Casa 7: X in [-31.25, -22.75]
-            new { NombreGO = "Casa_07_Amarilla", SpriteNombre = "Fachada_Amarilla_Completa", Pos = new Vector3(-27.00f, 9.89f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Balcon_Casa_07", SpriteNombre = "Balcon_Cantera_Hierro", Pos = new Vector3(-27.00f, 12.20f, 1.8f), Escala = Vector3.one, Order = -4 },
-            new { NombreGO = "Talavera_Casa_07", SpriteNombre = "Azulejos_Talavera_Guanajuato", Pos = new Vector3(-27.00f, 10.50f, 1.8f), Escala = Vector3.one, Order = -4 },
+            new { NombreGO = "Casa_07_Amarilla", SpriteNombre = "Fachada_Amarilla_Completa", Pos = new Vector3(-27.00f, 9.89f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Balcon_Casa_07", SpriteNombre = "Balcon_Cantera_Hierro", Pos = new Vector3(-27.00f, 12.20f, 1.8f), Escala = Vector3.one, Order = 1 },
+            new { NombreGO = "Talavera_Casa_07", SpriteNombre = "Azulejos_Talavera_Guanajuato", Pos = new Vector3(-27.00f, 10.50f, 1.8f), Escala = Vector3.one, Order = 1 },
 
             // Casa 8: X in [-22.75, -14.00]
-            new { NombreGO = "Casa_08_Roja", SpriteNombre = "Fachada_Roja_Completa", Pos = new Vector3(-18.375f, 9.86f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Mirador_Casa_08", SpriteNombre = "Mirador_Balcon_Madera", Pos = new Vector3(-18.375f, 12.20f, 1.8f), Escala = Vector3.one, Order = -4 },
+            new { NombreGO = "Casa_08_Roja", SpriteNombre = "Fachada_Roja_Completa", Pos = new Vector3(-18.375f, 9.86f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Mirador_Casa_08", SpriteNombre = "Mirador_Balcon_Madera", Pos = new Vector3(-18.375f, 12.20f, 1.8f), Escala = Vector3.one, Order = 1 },
 
             // Casa 9: X in [-14.00, -5.50]
-            new { NombreGO = "Casa_09_Amarilla", SpriteNombre = "Fachada_Amarilla_Completa", Pos = new Vector3(-9.75f, 9.89f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Balcon_Casa_09", SpriteNombre = "Balcon_Cantera_Hierro", Pos = new Vector3(-9.75f, 12.20f, 1.8f), Escala = Vector3.one, Order = -4 },
+            new { NombreGO = "Casa_09_Amarilla", SpriteNombre = "Fachada_Amarilla_Completa", Pos = new Vector3(-9.75f, 9.89f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Balcon_Casa_09", SpriteNombre = "Balcon_Cantera_Hierro", Pos = new Vector3(-9.75f, 12.20f, 1.8f), Escala = Vector3.one, Order = 1 },
 
             // Casa 10: X in [-5.50, +3.25]
-            new { NombreGO = "Casa_10_Roja", SpriteNombre = "Fachada_Roja_Completa", Pos = new Vector3(-1.125f, 9.86f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Mirador_Casa_10", SpriteNombre = "Mirador_Balcon_Madera", Pos = new Vector3(-1.125f, 12.20f, 1.8f), Escala = Vector3.one, Order = -4 },
+            new { NombreGO = "Casa_10_Roja", SpriteNombre = "Fachada_Roja_Completa", Pos = new Vector3(-1.125f, 9.86f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Mirador_Casa_10", SpriteNombre = "Mirador_Balcon_Madera", Pos = new Vector3(-1.125f, 12.20f, 1.8f), Escala = Vector3.one, Order = 1 },
 
             // =========================================================================
             // === PISO 2 (Plaza Central y Registro Civil - Portales y Fachadas Municipales) ===
             // Base en Y = 1.0, techo en Y = 5.0 (luz vertical de 4.0 m)
             // =========================================================================
-            new { NombreGO = "Arcada_Plaza_01", SpriteNombre = "Arco_Triple_Colonial", Pos = new Vector3(-72.0f, 3.0f, 2.0f), Escala = new Vector3(0.93f, 0.93f, 1f), Order = -5 },
-            new { NombreGO = "Oficina_Plaza_01", SpriteNombre = "Fachada_Azul_Puerta", Pos = new Vector3(-65.0f, 3.0f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Arcada_Plaza_02", SpriteNombre = "Arco_Triple_Colonial", Pos = new Vector3(-58.0f, 3.0f, 2.0f), Escala = new Vector3(0.93f, 0.93f, 1f), Order = -5 },
-            new { NombreGO = "Puerta_Registro_01", SpriteNombre = "Puerta_Doble_Tallada", Pos = new Vector3(-51.0f, 2.8f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = -5 },
-            new { NombreGO = "Ventana_Registro_01", SpriteNombre = "Ventana_Cantera_Vidrio", Pos = new Vector3(-48.0f, 3.0f, 1.8f), Escala = new Vector3(0.9f, 0.9f, 1f), Order = -4 },
-            new { NombreGO = "Arcada_Plaza_03", SpriteNombre = "Arco_Triple_Colonial", Pos = new Vector3(-43.0f, 3.0f, 2.0f), Escala = new Vector3(0.93f, 0.93f, 1f), Order = -5 },
-            new { NombreGO = "Oficina_RegistroCivil", SpriteNombre = "Fachada_Azul_Puerta", Pos = new Vector3(-36.0f, 3.0f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Arco_Piedra_Plaza", SpriteNombre = "Arco_Piedra_MedioPunto", Pos = new Vector3(-31.0f, 2.8f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Oficina_Plaza_03", SpriteNombre = "Fachada_Azul_Puerta", Pos = new Vector3(-26.0f, 3.0f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Puerta_Registro_02", SpriteNombre = "Puerta_Doble_Tallada", Pos = new Vector3(-21.0f, 2.8f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = -5 },
-            new { NombreGO = "Arcada_Plaza_04", SpriteNombre = "Arco_Triple_Colonial", Pos = new Vector3(-15.0f, 3.0f, 2.0f), Escala = new Vector3(0.93f, 0.93f, 1f), Order = -5 },
-            new { NombreGO = "Oficina_Plaza_04", SpriteNombre = "Fachada_Azul_Puerta", Pos = new Vector3(-8.0f, 3.0f, 2.0f), Escala = Vector3.one, Order = -5 },
+            new { NombreGO = "Arcada_Plaza_01", SpriteNombre = "Arco_Triple_Colonial", Pos = new Vector3(-72.0f, 3.0f, 2.0f), Escala = new Vector3(0.93f, 0.93f, 1f), Order = 0 },
+            new { NombreGO = "Oficina_Plaza_01", SpriteNombre = "Fachada_Azul_Puerta", Pos = new Vector3(-65.0f, 3.0f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Arcada_Plaza_02", SpriteNombre = "Arco_Triple_Colonial", Pos = new Vector3(-58.0f, 3.0f, 2.0f), Escala = new Vector3(0.93f, 0.93f, 1f), Order = 0 },
+            new { NombreGO = "Puerta_Registro_01", SpriteNombre = "Puerta_Doble_Tallada", Pos = new Vector3(-51.0f, 2.8f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = 0 },
+            new { NombreGO = "Ventana_Registro_01", SpriteNombre = "Ventana_Cantera_Vidrio", Pos = new Vector3(-48.0f, 3.0f, 1.8f), Escala = new Vector3(0.9f, 0.9f, 1f), Order = 1 },
+            new { NombreGO = "Arcada_Plaza_03", SpriteNombre = "Arco_Triple_Colonial", Pos = new Vector3(-43.0f, 3.0f, 2.0f), Escala = new Vector3(0.93f, 0.93f, 1f), Order = 0 },
+            new { NombreGO = "Oficina_RegistroCivil", SpriteNombre = "Fachada_Azul_Puerta", Pos = new Vector3(-36.0f, 3.0f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Arco_Piedra_Plaza", SpriteNombre = "Arco_Piedra_MedioPunto", Pos = new Vector3(-31.0f, 2.8f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Oficina_Plaza_03", SpriteNombre = "Fachada_Azul_Puerta", Pos = new Vector3(-26.0f, 3.0f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Puerta_Registro_02", SpriteNombre = "Puerta_Doble_Tallada", Pos = new Vector3(-21.0f, 2.8f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = 0 },
+            new { NombreGO = "Arcada_Plaza_04", SpriteNombre = "Arco_Triple_Colonial", Pos = new Vector3(-15.0f, 3.0f, 2.0f), Escala = new Vector3(0.93f, 0.93f, 1f), Order = 0 },
+            new { NombreGO = "Oficina_Plaza_04", SpriteNombre = "Fachada_Azul_Puerta", Pos = new Vector3(-8.0f, 3.0f, 2.0f), Escala = Vector3.one, Order = 0 },
 
             // =========================================================================
             // === PISO 3 (Zona de Archivos Coloniales & Panteón Histórico) ===
             // Base en Y = -4.0, techo en Y = 0.0 (luz vertical de 4.0 m)
             // =========================================================================
-            new { NombreGO = "Arco_Piedra_Archivos", SpriteNombre = "Arco_Piedra_MedioPunto", Pos = new Vector3(-72.0f, -2.2f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Arco_Archivos_01", SpriteNombre = "Arco_Cantera_Mixtilineo", Pos = new Vector3(-60.0f, -2.2f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Puerta_Archivos_01", SpriteNombre = "Puerta_Doble_Tallada", Pos = new Vector3(-53.0f, -2.2f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = -5 },
-            new { NombreGO = "Ventana_Archivos_01", SpriteNombre = "Ventana_Lattice_Plomada", Pos = new Vector3(-49.5f, -1.8f, 1.8f), Escala = Vector3.one, Order = -4 },
-            new { NombreGO = "Arco_Archivos_02", SpriteNombre = "Arco_Cantera_Mixtilineo", Pos = new Vector3(-45.0f, -2.2f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Puerta_Archivos_02", SpriteNombre = "Puerta_Madera_Simple", Pos = new Vector3(-39.0f, -2.2f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = -5 },
-            new { NombreGO = "Rejas_Archivos_01", SpriteNombre = "Rejas_Hierro_Ventana", Pos = new Vector3(-35.5f, -2.0f, 1.8f), Escala = Vector3.one, Order = -4 },
-            new { NombreGO = "Arco_Archivos_03", SpriteNombre = "Arco_Cantera_Mixtilineo", Pos = new Vector3(-32.0f, -2.2f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Puerta_Archivos_03", SpriteNombre = "Puerta_Doble_Tallada", Pos = new Vector3(-25.0f, -2.2f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = -5 },
-            new { NombreGO = "Ventana_Archivos_02", SpriteNombre = "Ventana_Madera_Cuadros", Pos = new Vector3(-21.5f, -2.0f, 1.8f), Escala = new Vector3(0.9f, 0.9f, 1f), Order = -4 },
-            new { NombreGO = "Arco_Archivos_04", SpriteNombre = "Arco_Cantera_Mixtilineo", Pos = new Vector3(-18.0f, -2.2f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Puerta_Archivos_04", SpriteNombre = "Puerta_Madera_Simple", Pos = new Vector3(-11.0f, -2.2f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = -5 },
+            new { NombreGO = "Arco_Piedra_Archivos", SpriteNombre = "Arco_Piedra_MedioPunto", Pos = new Vector3(-72.0f, -2.2f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Arco_Archivos_01", SpriteNombre = "Arco_Cantera_Mixtilineo", Pos = new Vector3(-60.0f, -2.2f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Puerta_Archivos_01", SpriteNombre = "Puerta_Doble_Tallada", Pos = new Vector3(-53.0f, -2.2f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = 0 },
+            new { NombreGO = "Ventana_Archivos_01", SpriteNombre = "Ventana_Lattice_Plomada", Pos = new Vector3(-49.5f, -1.8f, 1.8f), Escala = Vector3.one, Order = 1 },
+            new { NombreGO = "Arco_Archivos_02", SpriteNombre = "Arco_Cantera_Mixtilineo", Pos = new Vector3(-45.0f, -2.2f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Puerta_Archivos_02", SpriteNombre = "Puerta_Madera_Simple", Pos = new Vector3(-39.0f, -2.2f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = 0 },
+            new { NombreGO = "Rejas_Archivos_01", SpriteNombre = "Rejas_Hierro_Ventana", Pos = new Vector3(-35.5f, -2.0f, 1.8f), Escala = Vector3.one, Order = 1 },
+            new { NombreGO = "Arco_Archivos_03", SpriteNombre = "Arco_Cantera_Mixtilineo", Pos = new Vector3(-32.0f, -2.2f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Puerta_Archivos_03", SpriteNombre = "Puerta_Doble_Tallada", Pos = new Vector3(-25.0f, -2.2f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = 0 },
+            new { NombreGO = "Ventana_Archivos_02", SpriteNombre = "Ventana_Madera_Cuadros", Pos = new Vector3(-21.5f, -2.0f, 1.8f), Escala = new Vector3(0.9f, 0.9f, 1f), Order = 1 },
+            new { NombreGO = "Arco_Archivos_04", SpriteNombre = "Arco_Cantera_Mixtilineo", Pos = new Vector3(-18.0f, -2.2f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Puerta_Archivos_04", SpriteNombre = "Puerta_Madera_Simple", Pos = new Vector3(-11.0f, -2.2f, 2.0f), Escala = new Vector3(0.85f, 0.85f, 1f), Order = 0 },
 
             // =========================================================================
             // === CUEVA SUBTERRÁNEA (Descensos Mineros & Bóveda Final) ===
             // =========================================================================
-            new { NombreGO = "Arco_Entrada_Cueva", SpriteNombre = "Arco_Piedra_MedioPunto", Pos = new Vector3(-66.0f, -7.5f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Arco_Pasaje_Cueva", SpriteNombre = "Arco_Piedra_MedioPunto", Pos = new Vector3(-58.0f, -11.5f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Arco_Puente_Cueva", SpriteNombre = "Arco_Cantera_Mixtilineo", Pos = new Vector3(-54.0f, -14.5f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Arco_Boveda_Final", SpriteNombre = "Arco_Triple_Colonial", Pos = new Vector3(-74.0f, -17.5f, 2.0f), Escala = Vector3.one, Order = -5 },
-            new { NombreGO = "Rejas_Boveda_Final", SpriteNombre = "Rejas_Hierro_Ventana", Pos = new Vector3(-74.0f, -15.5f, 1.8f), Escala = Vector3.one, Order = -4 }
+            new { NombreGO = "Arco_Entrada_Cueva", SpriteNombre = "Arco_Piedra_MedioPunto", Pos = new Vector3(-66.0f, -7.5f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Arco_Pasaje_Cueva", SpriteNombre = "Arco_Piedra_MedioPunto", Pos = new Vector3(-58.0f, -11.5f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Arco_Puente_Cueva", SpriteNombre = "Arco_Cantera_Mixtilineo", Pos = new Vector3(-54.0f, -14.5f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Arco_Boveda_Final", SpriteNombre = "Arco_Triple_Colonial", Pos = new Vector3(-74.0f, -17.5f, 2.0f), Escala = Vector3.one, Order = 0 },
+            new { NombreGO = "Rejas_Boveda_Final", SpriteNombre = "Rejas_Hierro_Ventana", Pos = new Vector3(-74.0f, -15.5f, 1.8f), Escala = Vector3.one, Order = 1 }
         };
 
         foreach (var conf in edificiosConfig)
